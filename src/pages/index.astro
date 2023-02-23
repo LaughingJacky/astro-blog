@@ -140,7 +140,6 @@ const { items: lastThreePosts } = await contentfulClient.getEntries<BlogPost>({
 	.last-posts {
 		display: grid;
 		gap: 1.5rem;
-		grid-template-columns: repeat(3,minmax(0,1fr));
 		.post {
 			text-decoration: none;
 			background-color: rgba(30, 41, 50);
@@ -163,9 +162,14 @@ const { items: lastThreePosts } = await contentfulClient.getEntries<BlogPost>({
 				text-align: center;
 				padding: 1rem 0.75rem 1.5rem;
 				.title {
+					color: #fff;
 					font-weight: 600;
 					font-size: 1.25rem;
 					line-height: 1.75rem;
+				}
+				.date {
+					color: var(--gray-300);
+					font-size: 0.8rem;
 				}
 				.description {
 					color: #fff;
@@ -218,6 +222,9 @@ const { items: lastThreePosts } = await contentfulClient.getEntries<BlogPost>({
 	}
 
 	@media (min-width: 50em) {
+		.last-posts {
+			grid-template-columns: repeat(3,minmax(0,1fr));
+		}
 		.section {
 			grid-template-columns: repeat(4, 1fr);
 			grid-template-areas: 'header header header header' 'gallery gallery gallery gallery';

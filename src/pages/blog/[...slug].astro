@@ -1,6 +1,6 @@
 ---
-import shiki from 'shiki';
-// import { renderMarkdown } from '@astrojs/markdown-remark';
+import Markdown from '@astrojs/markdown-component';
+
 import ContactCTA from '../../components/ContactCTA.astro';
 import Hero from '../../components/Hero.astro';
 import Icon from '../../components/Icon.astro';
@@ -13,25 +13,18 @@ export async function getStaticPaths() {
   const { items } = await contentfulClient.getEntries<BlogPost>({
     content_type: 'blogPost'
   })
-	let posts = [];
-	const highlighter = await shiki.getHighlighter({theme: 'dark-plus'});
 
-	for (let item of items) {
-		const content = await highlighter.codeToHtml(item.fields.body, 'js');
-		posts.push({
+	return items.map(item => ({
 			params: { slug: item.fields.slug },
 			props: {
 				tags: item.fields.tags,
 				title: item.fields.title,
-				content,
+				content: item.fields.body,
 				description: item.fields.description,
 				heroImage: item.fields.heroImage.fields,
 				date: new Date(item.fields.publishDate).toLocaleDateString()
 			}
-		})
-	}
-
-  return posts;
+	}))
 }
 
 const { title, content, date, description, heroImage } = Astro.props;
@@ -53,7 +46,8 @@ const { title, content, date, description, heroImage } = Astro.props;
 			<main class="wrapper">
 				<div class="stack gap-10 content">
 					{heroImage && <img src={heroImage.file.url} alt={heroImage.title || ''} />}
-					<article set:html={content} />
+					<Markdown content={content} />
+					<!-- <article set:html={content} /> -->
 				</div>
 			</main>
 		</div>

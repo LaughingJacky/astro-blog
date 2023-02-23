@@ -1,13 +1,8 @@
 ---
-import type { Entry } from 'contentful';
-
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactCTA from '../components/ContactCTA.astro';
-import PortfolioPreview from '../components/PortfolioPreview.astro';
 import Hero from '../components/Hero.astro';
-import Grid from '../components/Grid.astro';
 import { BlogPost, contentfulClient } from '../lib/contentful';
-import { isHTMLBytes } from 'astro/dist/runtime/server/escape';
 
 const entries = await contentfulClient.getEntries<BlogPost>({
   content_type: 'blogPost',
@@ -75,21 +70,29 @@ const entries = await contentfulClient.getEntries<BlogPost>({
 
 		.cont {
 			.top-box {
-				display: flex;
 				color: #fff;
 			}
 			.title {
 				font-size: 1.25rem;
-				max-width: 60%;
+				max-width: 90%;
 				overflow: hidden;
 				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+
+			.description {
+				max-width: 90%;
+				display: -webkit-box;
+				-webkit-box-orient:vertical;
+				-webkit-line-clamp: 4;
+				overflow: hidden;
 				text-overflow: ellipsis;
 			}
 
 			.tag-list {
 				display: flex;
 				gap: 0.5rem;
-				margin-left: 0.75rem;
+				margin: 0.75rem 0;
 				.tag {
 					height: 1.5rem;
 					padding: 0 0.75rem;
@@ -111,6 +114,33 @@ const entries = await contentfulClient.getEntries<BlogPost>({
 				}
 				.tag:nth-child(4n + 3) {
 					background-color: rgb(136 19 55);
+				}
+			}
+
+			.description {
+				-webkit-line-clamp: 4;
+			}
+		}
+	}
+}
+
+@media (min-width: 60em) {
+	.blog-list {
+		.blog-item {
+			.cont {
+				.top-box {
+					display: flex;
+				}
+				.title {
+					max-width: 60%;
+				}
+
+				.tag-list {
+					margin-left: 0.75rem;
+					margin-top: 0;
+				}
+				.description {
+					max-width: 100%;
 				}
 			}
 		}

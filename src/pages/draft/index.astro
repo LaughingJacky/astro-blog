@@ -1,0 +1,19 @@
+---
+import Card from '../../components/Card';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const draftsList = [
+  {
+    name: '扫雷',
+    path: '/minesweeper',
+    description: 'simple minesweeper game',
+    img: '/assets/mine-smile.png',
+  }
+]
+---
+<BaseLayout
+	title="草稿 | 王晓博"
+	description="Code For Fun"
+>
+  {draftsList.map(d => <Card client:load imgSrc={d.img} path={d.path} cardName={d.name} label={d.description}  />)}
+</BaseLayout>

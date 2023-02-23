@@ -10,6 +10,8 @@
 		"astro": "astro"
 	},
 	"dependencies": {
+		"@astrojs/markdown-component": "^1.0.2",
+		"@astrojs/node": "^5.0.3",
 		"@astrojs/preact": "^2.0.3",
 		"@astrojs/vercel": "^3.1.2",
 		"@contentful/rich-text-html-renderer": "^16.0.2",
@@ -17,6 +19,7 @@
 		"contentful": "^9.2.14",
 		"dayjs": "^1.11.7",
 		"preact": "^10.12.1",
+		"remark-toc": "^8.0.1",
 		"shiki": "^0.14.1"
 	},
 	"overrides": {
@@ -24,6 +27,7 @@
 		"react-dom": "npm:@preact/compat@latest"
 	},
 	"devDependencies": {
+		"@types/node": "^18.14.1",
 		"sass": "^1.58.3"
 	}
 }

@@ -1,0 +1,49 @@
+.userCard {
+  width: 300px;
+  height: 300px;
+  text-align: center;
+  margin: 10px;
+  box-shadow: 0px 9px 7px -1px rgba(0, 0, 0, 0.16);
+  border-radius: 7px;
+  background-color: #008080;
+  transition: all ease 0.5s;
+  cursor: pointer;
+  // :hover {
+  //   opacity: 0.7;
+  //   cursor: pointer;
+  //   transform: translateY(-5px);
+  // }
+}
+
+.cardHeader {
+  background: #1b4d89;
+  height: 100px;
+  padding: 15px 8px 0px 8px;
+  border-radius: 7px 7px 0px 0px;
+  text-align: center;
+}
+
+.styledImg {
+  height: 110px;
+  width: 110px;
+  border-radius: 60px;
+  align-items: center;
+  margin-top: -50px;
+  border: 3px solid white;
+}
+
+.userName {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.infoContainer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.infoLabel {
+  margin-top: 10px;
+}
