@@ -1,7 +1,7 @@
 /*
  * @Author: shawbowang
  * @Date: 2023-02-18 02:44:15
- * @LastEditTime: 2023-02-23 17:36:48
+ * @LastEditTime: 2023-02-23 17:44:30
  * @LastEditors: shawbowang
  * @Description: 
  * @FilePath: /blog/astro.config.mjs
@@ -14,5 +14,5 @@ import vercel from '@astrojs/vercel/static';
 export default defineConfig({
   integrations: [preact({compat: true})],
   adapter: vercel(),
-  output: 'server',
+  output: 'static',
 });
