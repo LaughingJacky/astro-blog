@@ -1,7 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
-
 // Layout import — provides basic page elements: <head>, <nav>, <footer> etc.
+import dayjs from 'dayjs';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // Component Imports
@@ -10,41 +9,43 @@ import Grid from '../components/Grid.astro';
 import Hero from '../components/Hero.astro';
 import Icon from '../components/Icon.astro';
 import Pill from '../components/Pill.astro';
-import PortfolioPreview from '../components/PortfolioPreview.astro';
+// import PortfolioPreview from '../components/PortfolioPreview.astro';
 
 // Page section components
 import ContactCTA from '../components/ContactCTA.astro';
 import Skills from '../components/Skills.astro';
-
-// Content Fetching: List four most recent work projects
-const projects = (await getCollection('work'))
-	.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
-	.slice(0, 4);
+import { BlogPost, contentfulClient } from '../lib/contentful';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
+
+const { items: lastThreePosts } = await contentfulClient.getEntries<BlogPost>({
+	content_type: 'blogPost',
+	limit: 3,
+	order: 'sys.createdAt'
+});
+
 ---
 
 <BaseLayout>
-	<div class="stack gap-20 lg:gap-48">
-		<div class="wrapper stack gap-8 lg:gap-20">
+	<div class="stack gap-20">
+		<div class="wrapper stack gap-8">
 			<header class="hero">
 				<Hero
-					title="Hello, my name is Jeanine White"
-					tagline="I am a Creative Developer who is currently based in Portland, Oregon."
+					title="欢迎来到我的酒馆，外面冷坏了，来玩把昆特牌吧！"
+					tagline="这里是来自深圳的互联网从业人员，专注于架构、框架、性能等方向"
 					align="start"
 				>
 					<div class="roles">
-						<Pill><Icon icon="code" size="1.33em" /> Developer</Pill>
-						<Pill><Icon icon="microphone-stage" size="1.33em" /> Speaker</Pill>
-						<Pill><Icon icon="pencil-line" size="1.33em" /> Writer</Pill>
+						<Pill><Icon icon="code" size="1.33em" />前端</Pill>
+						<Pill><Icon icon="pencil-line" size="1.33em" />写作</Pill>
+						<Pill><Icon icon="finance" size="1.33em" />经济学</Pill>
 					</div>
 				</Hero>
-
 				<img
-					alt="Jeanine White smiling in a red plaid shirt and tortoise shell glasses"
-					width="480"
-					height="620"
+					alt="shawbo at Datang Furong Garden's youthful time"
+					width="300"
+					height="199"
 					src="/assets/portrait.jpg"
 				/>
 			</header>
@@ -52,61 +53,43 @@ const projects = (await getCollection('work'))
 			<Skills />
 		</div>
 
-		<main class="wrapper stack gap-20 lg:gap-48">
+		<main class="wrapper stack gap-20">
 			<section class="section with-background with-cta">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Selected Work</h3>
-					<p>Take a look below at some of my featured work for clients from the past few years.</p>
+					<h3>最近发表</h3>
+					<p></p>
 				</header>
 
-				<div class="gallery">
-					<Grid variant="offset">
-						{
-							projects.map((project) => (
-								<li>
-									<PortfolioPreview project={project} />
-								</li>
-							))
-						}
-					</Grid>
-				</div>
-
 				<div class="cta">
-					<CallToAction href="/work/">
-						View All
+					<CallToAction href="/blog/">
+						查看全部
 						<Icon icon="arrow-right" size="1.2em" />
 					</CallToAction>
 				</div>
 			</section>
-
-			<section class="section with-background bg-variant">
-				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Mentions</h3>
-					<p>
-						I have been fortunate enough to recieve praise for my work in several publications. Take
-						a look below to learn more.
-					</p>
-				</header>
-
-				<div class="gallery">
-					<Grid variant="small">
-						{
-							['Medium', 'BuzzFeed', 'The Next Web', 'awwwards.', 'TechCrunch'].map((brand) => (
-								<li class="mention-card">
-									<p>{brand}</p>
-								</li>
-							))
-						}
-					</Grid>
-				</div>
-			</section>
+			<div class="last-posts">
+			{
+				lastThreePosts.map(post => <a
+					class="post" href={`/blog/${post.fields.slug}`}>
+					<div class="overflow-hidden rounded-md bg-slate-800">
+						<div class="cover-img">
+							<img class="img" src={post.fields.heroImage.fields.file.url} alt="Image post" loading="lazy" />
+						</div>
+						<div class="text">
+							<h2 class="title">{post.fields.title}</h2>
+							<p class="date">{dayjs(post.fields.publishDate).format('YYYY年MM月DD日')}</p>
+							<p class="description">{post.fields.description}</p>
+						</div>
+					</div>
+				</a>)
+			}
+			</div>
 		</main>
-
 		<ContactCTA />
 	</div>
 </BaseLayout>
 
-<style>
+<style lang="scss">
 	.hero {
 		display: flex;
 		flex-direction: column;
@@ -141,8 +124,8 @@ const projects = (await getCollection('work'))
 		}
 
 		.hero img {
-			aspect-ratio: 3 / 4;
-			border-radius: 4.5rem;
+			aspect-ratio: 3 / 2;
+			border-radius: 1rem;
 			object-fit: cover;
 		}
 	}
@@ -152,6 +135,48 @@ const projects = (await getCollection('work'))
 	.section {
 		display: grid;
 		gap: 2rem;
+	}
+
+	.last-posts {
+		display: grid;
+		gap: 1.5rem;
+		grid-template-columns: repeat(3,minmax(0,1fr));
+		.post {
+			text-decoration: none;
+			background-color: rgba(30, 41, 50);
+			border-radius: 0.375rem;
+			overflow: hidden;
+			.cover-img {
+				padding-bottom: calc(2/3 * 100%);
+				position: relative;
+				.img {
+					object-position: center;
+					object-fit: cover;
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					inset: 0;
+				}
+			}
+
+			.text {
+				text-align: center;
+				padding: 1rem 0.75rem 1.5rem;
+				.title {
+					font-weight: 600;
+					font-size: 1.25rem;
+					line-height: 1.75rem;
+				}
+				.description {
+					color: #fff;
+					display: -webkit-box;
+					overflow: hidden;
+					-webkit-line-clamp: 3;
+					-webkit-box-orient:vertical;
+					text-overflow: ellipsis;
+				}
+			}
+		}
 	}
 
 	.with-background {
@@ -196,7 +221,6 @@ const projects = (await getCollection('work'))
 		.section {
 			grid-template-columns: repeat(4, 1fr);
 			grid-template-areas: 'header header header header' 'gallery gallery gallery gallery';
-			gap: 5rem;
 		}
 
 		.section.with-cta {
@@ -209,7 +233,7 @@ const projects = (await getCollection('work'))
 		}
 
 		.section-header h3 {
-			font-size: var(--text-4xl);
+			font-size: var(--text-2xl);
 		}
 
 		.with-cta .section-header {

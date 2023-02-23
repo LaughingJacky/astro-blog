@@ -1,0 +1,119 @@
+---
+import type { Entry } from 'contentful';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import PortfolioPreview from '../components/PortfolioPreview.astro';
+import Hero from '../components/Hero.astro';
+import Grid from '../components/Grid.astro';
+import { BlogPost, contentfulClient } from '../lib/contentful';
+import { isHTMLBytes } from 'astro/dist/runtime/server/escape';
+
+const entries = await contentfulClient.getEntries<BlogPost>({
+  content_type: 'blogPost',
+	order: 'sys.createdAt'
+})
+
+---
+
+<BaseLayout
+	title="My Work | 王晓博"
+	description="Learn about 王晓博's most recent projects"
+>
+	<div class="stack gap-20">
+		<main class="wrapper stack gap-8">
+			<Hero
+				title="博客列表"
+				align="start"
+			/>
+			<div class="blog-list">
+				{
+					entries.items.map((item) => (
+						<a class="blog-item" href={`/blog/${item.fields.slug}`}>
+							<img class="img" alt={item.fields.heroImage.fields.title} src={item.fields.heroImage.fields.file.url} />
+							<div class="cont">
+								<div class="top-box">
+									<div class="title">{item.fields.title}</div>
+									<div class="tag-list">
+										{
+											item.fields.tags.map(t => <span class="tag">{t}</span>)
+										}
+									</div>
+								</div>
+								<div class="description">{item.fields.description}</div>
+							</div>
+						</a>
+					))
+				}
+			</div>
+		</main>
+		<ContactCTA />
+	</div>
+</BaseLayout>
+<style lang="scss">
+.blog-list {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	padding-left: 0;
+	gap: 1.5rem;
+	.blog-item {
+		cursor: pointer;
+		width: 100%;
+		background-color: rgb(30 41 59 / 1);
+		list-style: none;
+		display: flex;
+		flex-direction: row;
+		border-radius: .375rem;	
+		padding: 0.75rem;
+		align-items: center;
+		vertical-align: middle;
+		gap: 1.5rem;
+		.img {
+			width: 18rem;
+		}
+
+		.cont {
+			.top-box {
+				display: flex;
+				color: #fff;
+			}
+			.title {
+				font-size: 1.25rem;
+				max-width: 60%;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+
+			.tag-list {
+				display: flex;
+				gap: 0.5rem;
+				margin-left: 0.75rem;
+				.tag {
+					height: 1.5rem;
+					padding: 0 0.75rem;
+					font-size: 0.75rem;
+					line-height: 1.5rem;
+					font-weight: 600;
+					border-radius: 0.375rem;
+					display: inline-block;
+					color: #fff;
+				}
+				.tag:nth-child(4n) {
+					background-color: rgb(232 121 249 / 1);
+				}
+				.tag:nth-child(4n + 1) {
+					background-color: rgb(54 83 20 / 1);
+				}
+				.tag:nth-child(4n + 2) {
+					background-color: rgb(12 74 110);
+				}
+				.tag:nth-child(4n + 3) {
+					background-color: rgb(136 19 55);
+				}
+			}
+		}
+	}
+}
+</style>

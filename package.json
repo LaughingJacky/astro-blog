@@ -10,6 +10,20 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"astro": "^2.0.14"
+		"@astrojs/preact": "^2.0.3",
+		"@astrojs/vercel": "^3.1.2",
+		"@contentful/rich-text-html-renderer": "^16.0.2",
+		"astro": "^2.0.14",
+		"contentful": "^9.2.14",
+		"dayjs": "^1.11.7",
+		"preact": "^10.12.1",
+		"shiki": "^0.14.1"
+	},
+	"overrides": {
+		"react": "npm:@preact/compat@latest",
+		"react-dom": "npm:@preact/compat@latest"
+	},
+	"devDependencies": {
+		"sass": "^1.58.3"
 	}
 }

@@ -121,6 +121,11 @@ body {
 	overflow-x: hidden;
 }
 
+a {
+	text-decoration: none;
+	color: #fff;
+}
+
 body {
 	background-color: var(--gray-999);
 	color: var(--gray-200);
@@ -139,10 +144,6 @@ body {
 img {
 	max-width: 100%;
 	height: auto;
-}
-
-a {
-	color: var(--link-color);
 }
 
 h1,

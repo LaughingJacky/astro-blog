@@ -1,0 +1,75 @@
+---
+import shiki from 'shiki';
+// import { renderMarkdown } from '@astrojs/markdown-remark';
+import ContactCTA from '../../components/ContactCTA.astro';
+import Hero from '../../components/Hero.astro';
+import Icon from '../../components/Icon.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BlogPost, contentfulClient } from '../../lib/contentful';
+
+
+
+export async function getStaticPaths() {
+  const { items } = await contentfulClient.getEntries<BlogPost>({
+    content_type: 'blogPost'
+  })
+	let posts = [];
+	const highlighter = await shiki.getHighlighter({theme: 'dark-plus'});
+
+	for (let item of items) {
+		const content = await highlighter.codeToHtml(item.fields.body, 'js');
+		posts.push({
+			params: { slug: item.fields.slug },
+			props: {
+				tags: item.fields.tags,
+				title: item.fields.title,
+				content,
+				description: item.fields.description,
+				heroImage: item.fields.heroImage.fields,
+				date: new Date(item.fields.publishDate).toLocaleDateString()
+			}
+		})
+	}
+
+  return posts;
+}
+
+const { title, content, date, description, heroImage } = Astro.props;
+
+---
+<BaseLayout title={title} description={description}>
+	<div class="stack gap-20 blog-detail">
+		<div class="stack gap-15">
+			<header>
+				<div class="wrapper stack gap-2">
+					<a class="back-link" href="/blog/"><Icon icon="arrow-left" />博客列表</a>
+					<Hero title={title} align="start">
+						<div class="details">
+							<p class="description">{description}</p>
+						</div>
+					</Hero>
+				</div>
+			</header>
+			<main class="wrapper">
+				<div class="stack gap-10 content">
+					{heroImage && <img src={heroImage.file.url} alt={heroImage.title || ''} />}
+					<article set:html={content} />
+				</div>
+			</main>
+		</div>
+		<ContactCTA />
+	</div>
+</BaseLayout>
+
+<style lang="scss">
+.blog-detail {
+	color: var(--gray-0);
+}
+.content {
+	img {
+		margin: auto;
+		width: 50%;
+		border-radius: 4px;
+	}
+}
+</style>
