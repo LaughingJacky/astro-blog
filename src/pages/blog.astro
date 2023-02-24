@@ -53,20 +53,14 @@ const entries = await contentfulClient.getEntries<BlogPost>({
 	padding-left: 0;
 	gap: 1.5rem;
 	.blog-item {
+		text-align: justify;
 		cursor: pointer;
 		width: 100%;
 		background-color: rgb(30 41 59 / 1);
 		list-style: none;
-		display: flex;
-		flex-direction: row;
 		border-radius: .375rem;	
 		padding: 0.75rem;
-		align-items: center;
-		vertical-align: middle;
 		gap: 1.5rem;
-		.img {
-			width: 18rem;
-		}
 
 		.cont {
 			.top-box {
@@ -74,14 +68,12 @@ const entries = await contentfulClient.getEntries<BlogPost>({
 			}
 			.title {
 				font-size: 1.25rem;
-				max-width: 90%;
 				overflow: hidden;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 			}
 
 			.description {
-				max-width: 90%;
 				display: -webkit-box;
 				-webkit-box-orient:vertical;
 				-webkit-line-clamp: 4;
@@ -127,6 +119,13 @@ const entries = await contentfulClient.getEntries<BlogPost>({
 @media (min-width: 60em) {
 	.blog-list {
 		.blog-item {
+			display: flex;
+			align-items: center;
+			vertical-align: middle;
+			flex-direction: row;
+			.img {
+				width: 18rem;
+			}
 			.cont {
 				.top-box {
 					display: flex;
