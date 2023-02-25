@@ -7,8 +7,6 @@ import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { BlogPost, contentfulClient } from '../../lib/contentful';
 
-
-
 export async function getStaticPaths() {
   const { items } = await contentfulClient.getEntries<BlogPost>({
     content_type: 'blogPost'
