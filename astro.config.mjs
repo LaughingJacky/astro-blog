@@ -1,19 +1,19 @@
 /*
  * @Author: shawbowang
  * @Date: 2023-02-18 02:44:15
- * @LastEditTime: 2023-02-25 13:24:39
+ * @LastEditTime: 2023-02-25 14:34:47
  * @LastEditors: shawbowang
  * @Description: 
  * @FilePath: /blog/astro.config.mjs
  */
 import { defineConfig } from 'astro/config';
 import preact from '@astrojs/preact';
-// import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel/serverless';
 import remarkToc from 'remark-toc';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [preact()],
+  integrations: [preact({compat: true})],
   markdown: {
     shikiConfig: {
       // Choose from Shiki's built-in themes (or add your own)
@@ -28,6 +28,6 @@ export default defineConfig({
     },
     remarkPlugins: [remarkToc],
   },
-  // adapter: vercel(),
-  // output: 'server',
+  adapter: vercel(),
+  output: 'server',
 });

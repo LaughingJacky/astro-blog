@@ -1,5 +1,5 @@
 ---
-import Markdown from '@astrojs/markdown-component';
+import { marked } from 'marked';
 
 import ContactCTA from '../../components/ContactCTA.astro';
 import Hero from '../../components/Hero.astro';
@@ -7,45 +7,45 @@ import Icon from '../../components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { BlogPost, contentfulClient } from '../../lib/contentful';
 
-export async function getStaticPaths() {
+let post;
+const { slug } = Astro.params;
+try {
   const { items } = await contentfulClient.getEntries<BlogPost>({
-    content_type: 'blogPost'
-  })
+    content_type: "blogPost",
+    "fields.slug": slug,
+  });
+	const { title, tags, body,  publishDate, description, heroImage } = items[0].fields;
+	post = {
+		title,
+		tags,
+		content: marked.parse(body),
+		description,
+		heroImage: heroImage.fields,
+		date: new Date(publishDate).toLocaleDateString()
+	}
 
-	return items.map(item => ({
-			params: { slug: item.fields.slug },
-			props: {
-				tags: item.fields.tags,
-				title: item.fields.title,
-				content: item.fields.body,
-				description: item.fields.description,
-				heroImage: item.fields.heroImage.fields,
-				date: new Date(item.fields.publishDate).toLocaleDateString()
-			}
-	}))
+} catch (e) {
+	return Astro.redirect('/404');
 }
 
-const { title, content, date, description, heroImage } = Astro.props;
-
 ---
-<BaseLayout title={title} description={description}>
+<BaseLayout title={post?.title} description={post?.description}>
 	<div class="stack gap-20 blog-detail">
 		<div class="stack gap-15">
 			<header>
 				<div class="wrapper stack gap-2">
 					<a class="back-link" href="/blog/"><Icon icon="arrow-left" />博客列表</a>
-					<Hero title={title} align="start">
+					<Hero title={post?.title} align="start">
 						<div class="details">
-							<p class="description">{description}</p>
+							<p class="description">{post?.description}</p>
 						</div>
 					</Hero>
 				</div>
 			</header>
 			<main class="wrapper">
 				<div class="stack gap-10 content">
-					{heroImage && <img src={heroImage.file.url} alt={heroImage.title || ''} />}
-					<Markdown content={content} />
-					<!-- <article set:html={content} /> -->
+					{post?.heroImage && <img src={post?.heroImage.file.url} alt={post?.heroImage.title || ''} />}
+					<article set:html={post?.content} />
 				</div>
 			</main>
 		</div>
