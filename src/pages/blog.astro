@@ -64,6 +64,10 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 		border-radius: .375rem;	
 		padding: 0.75rem;
 		gap: 1.5rem;
+		.img {
+			width: 100%;
+			aspect-ratio: 16 / 9;
+		}
 
 		.cont {
 			.top-box {
@@ -124,8 +128,6 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 		.blog-item {
 			display: flex;
 			align-items: center;
-			vertical-align: middle;
-			flex-direction: row;
 			.img {
 				width: 18rem;
 			}

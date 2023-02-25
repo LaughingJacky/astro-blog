@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 			props: {
 				tags: item.fields.tags,
 				title: item.fields.title,
-				content: item.fields.body,
+				content: marked.parse(item.fields.body),
 				description: item.fields.description,
 				heroImage: item.fields.heroImage.fields,
 				date: new Date(item.fields.publishDate).toLocaleDateString()
