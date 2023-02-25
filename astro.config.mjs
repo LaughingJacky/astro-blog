@@ -1,7 +1,7 @@
 /*
  * @Author: shawbowang
  * @Date: 2023-02-18 02:44:15
- * @LastEditTime: 2023-02-25 13:11:04
+ * @LastEditTime: 2023-02-25 13:24:39
  * @LastEditors: shawbowang
  * @Description: 
  * @FilePath: /blog/astro.config.mjs
@@ -13,7 +13,7 @@ import remarkToc from 'remark-toc';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [preact({compat: true})],
+  integrations: [preact()],
   markdown: {
     shikiConfig: {
       // Choose from Shiki's built-in themes (or add your own)
