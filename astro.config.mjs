@@ -1,14 +1,14 @@
 /*
  * @Author: shawbowang
  * @Date: 2023-02-18 02:44:15
- * @LastEditTime: 2023-02-25 15:01:47
+ * @LastEditTime: 2023-02-25 15:39:34
  * @LastEditors: shawbowang
  * @Description: 
  * @FilePath: /blog/astro.config.mjs
  */
 import { defineConfig } from 'astro/config';
 import preact from '@astrojs/preact';
-import vercel from '@astrojs/vercel/edge';
+import vercel from '@astrojs/vercel/serverless';
 import remarkToc from 'remark-toc';
 
 // https://astro.build/config
