@@ -4,6 +4,8 @@ import ContactCTA from '../components/ContactCTA.astro';
 import Hero from '../components/Hero.astro';
 import { BlogPost, contentfulClient } from '../lib/contentful';
 
+export const prerender = true;
+
 const entries = await contentfulClient.getEntries<BlogPost>({
   content_type: 'blogPost',
 	order: 'sys.createdAt'

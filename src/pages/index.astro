@@ -9,7 +9,6 @@ import Grid from '../components/Grid.astro';
 import Hero from '../components/Hero.astro';
 import Icon from '../components/Icon.astro';
 import Pill from '../components/Pill.astro';
-// import PortfolioPreview from '../components/PortfolioPreview.astro';
 
 // Page section components
 import ContactCTA from '../components/ContactCTA.astro';
@@ -18,6 +17,8 @@ import { BlogPost, contentfulClient } from '../lib/contentful';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
+
+export const prerender = true;
 
 const { items: lastThreePosts } = await contentfulClient.getEntries<BlogPost>({
 	content_type: 'blogPost',

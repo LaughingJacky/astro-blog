@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 import ContactCTA from '../components/ContactCTA.astro';
 import Hero from '../components/Hero.astro';
+
+export const prerender = true;
 ---
 
 <BaseLayout title="About | 王晓博" description="About 王晓博 Lorem Ipsum">
@@ -28,7 +30,6 @@ import Hero from '../components/Hero.astro';
 				<div class="content"><p>腾讯手游助手、Gameloop、PC应用宝</p></div>
 			</section>
 		</main>
-
 		<ContactCTA />
 	</div>
 </BaseLayout>
