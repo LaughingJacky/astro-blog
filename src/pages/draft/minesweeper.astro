@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import MineSweeper from "../../components/Minesweep";
----
 
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
+---
 <BaseLayout
 	title="草稿 | 王晓博"
 	description="Code For Fun"

@@ -5,6 +5,7 @@ import ContactCTA from '../components/ContactCTA.astro';
 import Hero from '../components/Hero.astro';
 
 export const prerender = true;
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
 ---
 
 <BaseLayout title="About | 王晓博" description="About 王晓博 Lorem Ipsum">

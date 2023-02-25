@@ -26,7 +26,7 @@ export async function getStaticPaths() {
 	}))
 }
 const { title, content, date, description, heroImage } = Astro.props;
-
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
 // let post;
 // const { slug } = Astro.params;
 // try {

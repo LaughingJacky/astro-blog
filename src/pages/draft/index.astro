@@ -10,6 +10,8 @@ const draftsList = [
     img: '/assets/mine-smile.png',
   }
 ]
+
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
 ---
 <BaseLayout
 	title="草稿 | 王晓博"
