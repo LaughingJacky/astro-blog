@@ -27,27 +27,6 @@ export async function getStaticPaths() {
 }
 const { title, content, date, description, heroImage } = Astro.props;
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
-// let post;
-// const { slug } = Astro.params;
-// try {
-//   const { items } = await contentfulClient.getEntries<BlogPost>({
-//     content_type: "blogPost",
-//     "fields.slug": slug,
-//   });
-// 	const { title, tags, body,  publishDate, description, heroImage } = items[0].fields;
-// 	post = {
-// 		title,
-// 		tags,
-// 		content: marked.parse(body),
-// 		description,
-// 		heroImage: heroImage.fields,
-// 		date: new Date(publishDate).toLocaleDateString()
-// 	}
-
-// } catch (e) {
-// 	return Astro.redirect('/404');
-// }
-
 ---
 <BaseLayout title={title} description={description}>
 	<div class="stack gap-20 blog-detail">

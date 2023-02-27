@@ -22,7 +22,7 @@ export const prerender = true;
 const { items: lastThreePosts } = await contentfulClient.getEntries<BlogPost>({
 	content_type: 'blogPost',
 	limit: 3,
-	order: 'sys.createdAt'
+	order: '-sys.createdAt'
 });
 
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');

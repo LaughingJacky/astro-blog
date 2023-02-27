@@ -8,7 +8,7 @@ export const prerender = true;
 
 const entries = await contentfulClient.getEntries<BlogPost>({
   content_type: 'blogPost',
-	order: 'sys.createdAt'
+	order: '-sys.createdAt'
 })
 
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
