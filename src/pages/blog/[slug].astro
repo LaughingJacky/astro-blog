@@ -33,7 +33,7 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 		<div class="stack gap-15">
 			<header>
 				<div class="wrapper stack gap-2">
-					<a class="back-link" href="/blog/"><Icon icon="arrow-left" />博客列表</a>
+					<a class="back-link" href="/blog/"><Icon icon="arrow-left" /><span class="back-text">博客列表</span></a>
 					<Hero title={title} align="start">
 						<div class="details">
 							<p class="description">{description}</p>
@@ -61,6 +61,14 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 		margin: auto;
 		width: 50%;
 		border-radius: 4px;
+	}
+}
+.back-link {
+	color: var(--gray-0);
+	font-size: var(--text-lg);
+	margin-bottom: 20px;
+	.back-text {
+		margin-left: 5px;
 	}
 }
 </style>

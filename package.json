@@ -10,23 +10,36 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/node": "^5.0.3",
-		"@astrojs/preact": "^2.0.3",
-		"@astrojs/vercel": "^3.1.2",
+		"@astrojs/node": "^5.1.2",
+		"@astrojs/preact": "^2.1.0",
+		"@astrojs/vercel": "^3.3.0",
 		"@contentful/rich-text-html-renderer": "^16.0.2",
-		"astro": "^2.0.14",
+		"astro": "^2.3.4",
+		"axios": "^1.4.0",
 		"contentful": "^9.2.14",
+		"crypto": "^1.0.1",
 		"dayjs": "^1.11.7",
-		"marked": "^4.2.12",
+		"graphql": "^16.6.0",
+		"graphql-request": "^6.0.0",
+		"js-yaml": "^4.1.0",
 		"preact": "^10.12.1",
+		"rehype-stringify": "^9.0.3",
+		"remark-parse": "^10.0.1",
+		"remark-rehype": "^10.1.0",
+		"remark-stringify": "^10.0.2",
 		"remark-toc": "^8.0.1",
-		"shiki": "^0.14.1"
+		"sharp": "^0.32.1",
+		"shiki": "^0.14.1",
+		"strip-markdown": "^5.0.0",
+		"unified": "^10.1.2",
+		"unist-util-visit": "^4.1.2"
 	},
 	"overrides": {
 		"react": "npm:@preact/compat@latest",
 		"react-dom": "npm:@preact/compat@latest"
 	},
 	"devDependencies": {
+		"@types/js-yaml": "^4.0.5",
 		"@types/marked": "^4.0.8",
 		"@types/node": "^18.14.1",
 		"sass": "^1.58.3"

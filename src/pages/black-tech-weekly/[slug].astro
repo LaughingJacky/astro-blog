@@ -1,0 +1,104 @@
+---
+// import type { MdastRoot } from 'remark-rehype/lib';
+// import { visit } from 'unist-util-visit';
+import ContactCTA from '../../components/ContactCTA.astro';
+import Hero from '../../components/Hero.astro';
+import Icon from '../../components/Icon.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getWeeklyItem } from "../../lib/weekly-data";
+// import { markdownRenderer, markdownTexter } from "../../lib/weekly-data/parser";
+
+// export const prerender = true;
+
+const { slug = 1 } = Astro.params;
+const weeklyRes = await getWeeklyItem(+slug);
+const articleInfo = weeklyRes.repository.issue;
+
+// const nodes = markdownRenderer.parse(articleInfo.body);
+// const hrIndex = nodes.children.findIndex((node) => node.type === 'thematicBreak');
+// if (hrIndex === -1) throw new Error('Post need <hr>');
+// const frontNodes: MdastRoot = {
+//   type: 'root',
+//   children: nodes.children.slice(0, hrIndex),
+// };
+// let summaryNode: MdastRoot;
+// visit(frontNodes, 'blockquote', (node) => {
+//   console.log(summaryNode);
+//   summaryNode = {
+//     type: 'root',
+//     children: node.children,
+//   }
+// });
+
+// if (summaryNode) {
+//   const summaryText = markdownTexter
+//     .stringify(await markdownTexter.run(summaryNode))
+//     // https://stackoverflow.com/a/46548738/8810271
+//     .replace(/(?: *[\n\r])+ */g, ' ')
+//     .trim();
+//   console.log(summaryText, 'summaryText');
+// }
+
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
+---
+<BaseLayout
+  title={articleInfo.title}
+  description={}
+>
+<div class="stack gap-20 weekly-detail">
+  <div class="stack gap-15">
+    <header>
+      <div class="wrapper stack gap-2">
+        <a class="back-link" href="/black-tech-weekly/"><Icon icon="arrow-left" /><span class="back-text">博客列表</span></a>
+        <Hero title={articleInfo.title} align="start">
+          <!-- <div class="details">
+            <p class="description">{description}</p>
+          </div> -->
+        </Hero>
+      </div>
+    </header>
+    <main class="wrapper">
+      <div class="stack gap-10 content">
+        <article class="weekly-article" set:html={articleInfo.bodyHTML} />
+      </div>
+    </main>
+  </div>
+  <ContactCTA />
+</div>
+</BaseLayout>
+<style is:global lang="scss">
+  .weekly-article {
+    img:first-child {
+      width: 80%;
+      margin-left: 10%;
+      margin-bottom: 2rem;
+    }
+
+    blockquote {
+      margin-top: 1rem;
+    }
+    h2 {
+      font-size: var(--text-2xl); 
+      margin: 1rem 0;
+    }
+
+    h3 {
+      font-size: var(--text-xl);
+      margin: 1rem 0;
+      margin-top: 2rem;
+    }
+
+    h4 {
+      margin: 1rem 0;
+      font-size: var(--text-lg);
+    }
+
+    a {
+      color: #2A89FF;
+    }
+    ol, ul {
+      margin-bottom: 1rem;
+    }
+  }
+
+</style>

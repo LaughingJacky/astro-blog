@@ -1,0 +1,90 @@
+fragment issueInfo on Issue {
+  number
+  url
+  title
+  body
+  createdAt
+  includesCreatedEdit
+  lastEditedAt
+  labels(first: $postLabelCount) {
+    nodes {
+      name
+    }
+  }
+  reactionGroups {
+    content
+    users(first: $reactionCount) {
+      totalCount
+      nodes {
+        login
+      }
+    }
+  }
+  comments(first: $commentCount) {
+    nodes {
+      id
+      resourcePath
+      author {
+        avatarUrl(size: 64)
+        id: login
+      }
+      body
+      createdAt
+      reactionGroups {
+        content
+        users(first: $reactionCount) {
+          totalCount
+          nodes {
+            login
+          }
+        }
+      }
+    }
+  }
+}
+
+query blogs(
+  $repo: String!
+  $owner: String!
+  $postCount: Int!
+  $postLabels: [String!]
+  $postLabelCount: Int!
+  $labelCount: Int!
+  $commentCount: Int!
+  $reactionCount: Int!
+  $extraDataNumber: Int!
+) {
+  repository(name: $repo, owner: $owner) {
+    owner {
+      ... on User {
+        databaseId
+      }
+    }
+    issues(
+      first: $postCount
+      labels: $postLabels
+      filterBy: { createdBy: $owner }
+    ) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        ...issueInfo
+      }
+    }
+    extraData: issue(number: $extraDataNumber) {
+      bodyText
+    }
+    labels(first: $labelCount) {
+      pageInfo {
+        hasNextPage
+      }
+      nodes {
+        name
+        color
+        description
+      }
+    }
+  }
+}

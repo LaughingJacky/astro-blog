@@ -1,0 +1,46 @@
+---
+import ContactCTA from "../../components/ContactCTA.astro";
+import Hero from "../../components/Hero.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getList } from "../../lib/weekly-data";
+import dayjs from 'dayjs';
+// import '../../lib/weekly-data/index.ts';
+
+export const prerender = true;
+const listRes = await getList();
+const listData = listRes.repository.issues.edges;
+
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
+---
+<BaseLayout
+  title="黑科技周刊"
+  description="黑科技周刊，分享一些有趣的黑科技。"
+>
+  <div class="stack gap-20">
+    <main class="wrapper stack gap-8">
+      <Hero
+        title="往期周刊"
+        align="start"
+      />
+      <div class="weekly-list">
+        {
+          listData.map((item) => (
+            <a class="weekly-item" href={`/black-tech-weekly/${item.node.number}`}>
+              <span>{item.node.title}</span>
+              <span>{dayjs(item.node.lastEditedAt).format('YYYY-MM-DD')}</span>
+            </a>
+          ))
+        }
+      </div>
+    </main>
+    <ContactCTA />
+  </div>
+</BaseLayout>
+<style lang="scss">
+  .weekly-item {
+    color: var(--gray-0);
+    display: flex;
+    cursor: pointer;
+    justify-content: space-between;
+  }
+</style>
