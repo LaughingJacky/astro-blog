@@ -6,7 +6,7 @@ import { getList } from "../../lib/weekly-data";
 import dayjs from 'dayjs';
 // import '../../lib/weekly-data/index.ts';
 
-export const prerender = true;
+// export const prerender = true;
 const listRes = await getList();
 const listData = listRes.repository.issues.edges;
 
@@ -27,7 +27,7 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
           listData.map((item) => (
             <a class="weekly-item" href={`/black-tech-weekly/${item.node.number}`}>
               <span>{item.node.title}</span>
-              <span>{dayjs(item.node.lastEditedAt).format('YYYY-MM-DD')}</span>
+              <span>{dayjs(item.node.updatedAt).format('YYYY-MM-DD')}</span>
             </a>
           ))
         }
@@ -42,5 +42,6 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
     display: flex;
     cursor: pointer;
     justify-content: space-between;
+    margin-bottom: 1em;
   }
 </style>

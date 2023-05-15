@@ -28,7 +28,7 @@ export const getList = async () => await client.request<{
       edges: {
         node: {
           title: string;
-          lastEditedAt: string;
+          updatedAt: string;
           number: number;
         }
       }[];
@@ -41,7 +41,7 @@ query {
       edges {
         node {
           title
-          lastEditedAt
+          updatedAt
           number
         }
       }
