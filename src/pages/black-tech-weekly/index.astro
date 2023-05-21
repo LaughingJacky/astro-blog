@@ -27,7 +27,7 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
           listData.map((item) => (
             <a class="weekly-item" href={`/black-tech-weekly/${item.node.number}`}>
               <span>{item.node.title}</span>
-              <span>{dayjs(item.node.updatedAt).format('YYYY-MM-DD')}</span>
+              <span>{dayjs(item.node.createdAt).format('YYYY-MM-DD')}</span>
             </a>
           ))
         }

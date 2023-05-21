@@ -28,7 +28,7 @@ export const getList = async () => await client.request<{
       edges: {
         node: {
           title: string;
-          updatedAt: string;
+          createdAt: string;
           number: number;
         }
       }[];
@@ -37,11 +37,11 @@ export const getList = async () => await client.request<{
 }>(gql`
 query {
   repository(owner: "LaughingJacky", name: "weekly") {
-    issues(states: OPEN, filterBy: {labels: "weekly"}, orderBy: {field: UPDATED_AT, direction: DESC}, last: 10) {
+    issues(states: OPEN, filterBy: {labels: "weekly"}, orderBy: {field: CREATED_AT, direction: DESC}, last: 10) {
       edges {
         node {
           title
-          updatedAt
+          createdAt
           number
         }
       }
