@@ -37,7 +37,7 @@ export const getList = async () => await client.request<{
 }>(gql`
 query {
   repository(owner: "LaughingJacky", name: "weekly") {
-    issues(states: OPEN, filterBy: {labels: "weekly"}, last: 10) {
+    issues(states: OPEN, filterBy: {labels: "weekly"}, orderBy: {field: UPDATED_AT, direction: DESC}, last: 10) {
       edges {
         node {
           title
