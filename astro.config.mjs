@@ -17,9 +17,9 @@ export default defineConfig({
   integrations: [
     preact({ compat: true }),
     sitemap({
-      i18n: {
-        defaultLocale: 'zh-CN'
-      },
+      // i18n: {
+      //   defaultLocale: 'zh-CN'
+      // },
       serialize(item) {
         if (/\/black-tech-weekly\//.test(item.url)) {
           item.changefreq = 'weekly';
