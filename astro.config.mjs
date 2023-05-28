@@ -8,12 +8,29 @@
  */
 import { defineConfig } from 'astro/config';
 import preact from '@astrojs/preact';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel/static';
+import sitemap from '@astrojs/sitemap';
 import remarkToc from 'remark-toc';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [preact({compat: true})],
+  integrations: [
+    preact({ compat: true }),
+    sitemap({
+      i18n: {
+        defaultLocale: 'zh-CN'
+      },
+      serialize(item) {
+        if (/\/black-tech-weekly\//.test(item.url)) {
+          item.changefreq = 'weekly';
+          item.priority = 0.9;
+          item.lastmod = new Date();
+        }
+
+        return item;
+      }
+    })
+  ],
   markdown: {
     shikiConfig: {
       // Choose from Shiki's built-in themes (or add your own)
@@ -29,5 +46,6 @@ export default defineConfig({
     remarkPlugins: [remarkToc],
   },
   adapter: vercel(),
-  output: 'server',
+  output: 'static',
+  site: 'https://shawbo.ltd'
 });

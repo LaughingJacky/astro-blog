@@ -29,7 +29,9 @@ export const getList = async () => await client.request<{
         node: {
           title: string;
           createdAt: string;
+          updatedAt: string;
           number: number;
+          bodyHTML: string;
         }
       }[];
     }
@@ -42,7 +44,13 @@ query {
         node {
           title
           createdAt
+          updatedAt
           number
+          body
+          bodyHTML
+          author {
+            login
+          }
         }
       }
     }

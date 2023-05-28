@@ -1,56 +1,42 @@
 ---
-// import type { MdastRoot } from 'remark-rehype/lib';
-// import { visit } from 'unist-util-visit';
 import ContactCTA from '../../components/ContactCTA.astro';
 import Hero from '../../components/Hero.astro';
 import Icon from '../../components/Icon.astro';
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getWeeklyItem } from "../../lib/weekly-data";
-// import { markdownRenderer, markdownTexter } from "../../lib/weekly-data/parser";
+import { getList, getWeeklyItem } from "../../lib/weekly-data";
 
-// export const prerender = true;
+export const prerender = true;
 
-const { slug = 1 } = Astro.params;
-const weeklyRes = await getWeeklyItem(+slug);
-const articleInfo = weeklyRes.repository.issue;
+export async function getStaticPaths() {
+  const listRes = await getList();
+  const listData = listRes.repository.issues.edges;
+  return listData.map(d => ({
+    params: { slug: d.node.number },
+    props: {
+      title: d.node.title,
+      bodyHTML: d.node.bodyHTML,
+    }
+	}));
+}
 
-// const nodes = markdownRenderer.parse(articleInfo.body);
-// const hrIndex = nodes.children.findIndex((node) => node.type === 'thematicBreak');
-// if (hrIndex === -1) throw new Error('Post need <hr>');
-// const frontNodes: MdastRoot = {
-//   type: 'root',
-//   children: nodes.children.slice(0, hrIndex),
-// };
-// let summaryNode: MdastRoot;
-// visit(frontNodes, 'blockquote', (node) => {
-//   console.log(summaryNode);
-//   summaryNode = {
-//     type: 'root',
-//     children: node.children,
-//   }
-// });
+const { title, bodyHTML } = Astro.props;
 
-// if (summaryNode) {
-//   const summaryText = markdownTexter
-//     .stringify(await markdownTexter.run(summaryNode))
-//     // https://stackoverflow.com/a/46548738/8810271
-//     .replace(/(?: *[\n\r])+ */g, ' ')
-//     .trim();
-//   console.log(summaryText, 'summaryText');
-// }
+// const { slug = 1 } = Astro.params;
+// const weeklyRes = await getWeeklyItem(+slug);
+// const articleInfo = weeklyRes.repository.issue;
 
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
 ---
 <BaseLayout
-  title={articleInfo.title}
-  description={articleInfo.title}
+  title={title}
+  description={title}
 >
 <div class="stack gap-20 weekly-detail">
   <div class="stack gap-15">
     <header>
       <div class="wrapper stack gap-2">
-        <a class="back-link" href="/black-tech-weekly/"><Icon icon="arrow-left" /><span class="back-text">博客列表</span></a>
-        <Hero title={articleInfo.title} align="start">
+        <a class="back-link mb-4" href="/black-tech-weekly/"><Icon icon="arrow-left" /><span class="back-text">博客列表</span></a>
+        <Hero title={title} align="start">
           <!-- <div class="details">
             <p class="description">{description}</p>
           </div> -->
@@ -59,7 +45,7 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
     </header>
     <main class="wrapper">
       <div class="stack gap-10 content">
-        <article class="weekly-article" set:html={articleInfo.bodyHTML} />
+        <article class="weekly-article" set:html={bodyHTML} />
       </div>
     </main>
   </div>
@@ -100,5 +86,4 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
       margin-bottom: 1rem;
     }
   }
-
 </style>
