@@ -6,7 +6,7 @@
  * @Description: 
  * @FilePath: /blog/src/lib/contentful.ts
  */
-import contentful from 'contentful';
+import contentful, { type FieldsType } from 'contentful';
 
 export interface BlogPost {
   title: string;
@@ -14,6 +14,8 @@ export interface BlogPost {
   description: string;
   body: string;
   tags: string[];
+  fields: FieldsType;
+  contentTypeId: string;
   author: {
     fields: {
       name: string;
@@ -21,7 +23,7 @@ export interface BlogPost {
       company: string;
     };
   };
-  heroImage: {
+  heroImage?: {
     fields: {
       title: string;
       file: {
@@ -34,8 +36,6 @@ export interface BlogPost {
 
 export const contentfulClient = contentful.createClient({
   space: import.meta.env.CONTENTFUL_SPACE_ID,
-  accessToken: import.meta.env.CONTENTFUL_DELIVERY_TOKEN,
-  host: 'cdn.contentful.com'
-  // accessToken: import.meta.env.DEV ? import.meta.env.CONTENTFUL_PREVIEW_TOKEN : import.meta.env.CONTENTFUL_DELIVERY_TOKEN,
-  // host: import.meta.env.DEV ? 'preview.contentful.com' : 'cdn.contentful.com'
+  accessToken: import.meta.env.DEV ? import.meta.env.CONTENTFUL_PREVIEW_TOKEN : import.meta.env.CONTENTFUL_DELIVERY_TOKEN,
+  host: import.meta.env.DEV ? 'preview.contentful.com' : 'cdn.contentful.com'
 })

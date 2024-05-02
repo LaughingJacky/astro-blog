@@ -11,6 +11,8 @@ const entries = await contentfulClient.getEntries<BlogPost>({
 	order: '-sys.createdAt'
 })
 
+console.log(entries);
+
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
 ---
 

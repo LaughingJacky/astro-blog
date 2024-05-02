@@ -12,7 +12,8 @@ import Pill from '../components/Pill.astro';
 // Page section components
 import ContactCTA from '../components/ContactCTA.astro';
 import Skills from '../components/Skills.astro';
-import { BlogPost, contentfulClient } from '../lib/contentful';
+import type { BlogPost } from '../lib/contentful';
+import { contentfulClient } from '../lib/contentful';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
@@ -38,9 +39,9 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 					align="start"
 				>
 					<div class="roles">
-						<Pill><Icon icon="code" size="1.33em" />前端</Pill>
-						<Pill><Icon icon="pencil-line" size="1.33em" />写作</Pill>
+						<Pill><Icon icon="code" size="1.33em" />软件</Pill>
 						<Pill><Icon icon="finance" size="1.33em" />经济学</Pill>
+						<Pill><Icon icon="pencil-line" size="1.33em" />AI</Pill>
 					</div>
 				</Hero>
 				<img
