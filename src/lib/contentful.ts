@@ -6,16 +6,14 @@
  * @Description: 
  * @FilePath: /blog/src/lib/contentful.ts
  */
-import contentful, { type FieldsType } from 'contentful';
+import contentful, { type EntrySkeletonType } from 'contentful';
 
-export interface BlogPost {
+export interface BlogPostFields {
   title: string;
   slug: string;
   description: string;
   body: string;
   tags: string[];
-  fields: FieldsType;
-  contentTypeId: string;
   author: {
     fields: {
       name: string;
@@ -28,10 +26,15 @@ export interface BlogPost {
       title: string;
       file: {
         url: string;
-      }
-    }
+      };
+    };
   };
   publishDate: string;
+}
+
+export interface BlogPost extends EntrySkeletonType {
+  fields: BlogPostFields;
+  contentTypeId: 'blogPost';
 }
 
 export const contentfulClient = contentful.createClient({

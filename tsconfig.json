@@ -3,6 +3,12 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "preact",
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@solid/*": ["src/components/solid/*"],
+      "@lib/*": ["src/lib/*"],
+    }
   }
 }

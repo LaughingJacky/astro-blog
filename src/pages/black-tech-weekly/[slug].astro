@@ -1,9 +1,9 @@
 ---
-import ContactCTA from '../../components/ContactCTA.astro';
-import Hero from '../../components/Hero.astro';
-import Icon from '../../components/Icon.astro';
+import ContactCTA from '@components/ContactCTA.astro';
+import Hero from '@components/Hero.astro';
+import Icon from '@components/Icon.astro';
+import { getList } from "@lib/weekly-data";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getList, getWeeklyItem } from "../../lib/weekly-data";
 
 export const prerender = true;
 

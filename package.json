@@ -10,21 +10,21 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/node": "^8.2.5",
-		"@astrojs/preact": "^3.2.0",
-		"@astrojs/sitemap": "^3.1.4",
-		"@astrojs/vercel": "^7.5.4",
+		"@astrojs/node": "^8.3.2",
+		"@astrojs/preact": "^3.5.1",
+		"@astrojs/sitemap": "^3.1.6",
+		"@astrojs/solid-js": "^4.4.0",
+		"@astrojs/vercel": "^7.7.2",
 		"@contentful/rich-text-html-renderer": "^16.3.5",
-		"astro": "^4.7.0",
+		"astro": "^4.12.2",
 		"axios": "^1.4.0",
-		"contentful": "^10.9.2",
-		"crypto": "^1.0.1",
+		"contentful": "^10.12.13",
 		"dayjs": "^1.11.7",
 		"graphql": "^16.6.0",
 		"graphql-request": "^6.0.0",
 		"isomorphic-dompurify": "^2.9.0",
 		"marked": "^12.0.2",
-		"preact": "^10.21.0",
+		"preact": "^10.22.1",
 		"prismjs": "^1.29.0",
 		"rehype-stringify": "^9.0.3",
 		"remark-parse": "^10.0.1",
@@ -32,13 +32,15 @@
 		"remark-stringify": "^10.0.2",
 		"remark-toc": "^9.0.0",
 		"sharp": "^0.32.1",
+		"solid-js": "^1.8.18",
 		"strip-markdown": "^5.0.0",
 		"unified": "^10.1.2",
 		"unist-util-visit": "^4.1.2"
 	},
 	"overrides": {
-		"react": "npm:@preact/compat@latest",
-		"react-dom": "npm:@preact/compat@latest"
+		"react": "pnpm:@preact/compat@latest",
+		"react-dom": "pnpm:@preact/compat@latest",
+		"react/jsx-runtime": "pnpm:@preact/jsx-runtime@latest"
 	},
 	"devDependencies": {
 		"@types/js-yaml": "^4.0.5",

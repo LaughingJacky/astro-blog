@@ -1,32 +1,55 @@
 ---
-import DOMPurify from 'isomorphic-dompurify';
+import * as DOMPurify from 'isomorphic-dompurify';
 import marked from '../../lib/marked';
 
-import ContactCTA from '../../components/ContactCTA.astro';
-import Hero from '../../components/Hero.astro';
-import Icon from '../../components/Icon.astro';
+import ContactCTA from '@components/ContactCTA.astro';
+import Hero from '@components/Hero.astro';
+import Icon from '@components/Icon.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import type { BlogPost } from '../../lib/contentful';
-import { contentfulClient } from '../../lib/contentful';
+import type { BlogPost } from '@lib/contentful';
+import { contentfulClient } from '@lib/contentful';
+
+interface Props {
+	title: string;
+	content: string;
+	date: string;
+	description: string;
+	heroImage?: {
+		file: {
+			url: string;
+		};
+		title: string;
+	};
+}
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const { items } = await contentfulClient.getEntries<BlogPost>({
     content_type: 'blogPost'
-  })
+  });
 
-	return items.map(item => ({
-			params: { slug: item.fields.slug },
-			props: {
-				tags: item.fields.tags,
-				title: item.fields.title,
-				content: DOMPurify.sanitize(marked.parse(String(item.fields.body))),
-				description: item.fields.description,
-				heroImage: item.fields.heroImage?.fields,
-				date: new Date(item.fields.publishDate).toLocaleDateString()
-			}
-	}))
+  const paths = await Promise.all(items.map(async (item) => {
+    const sanitizedContent = DOMPurify.sanitize(await marked.parse(String(item.fields.body)));
+
+		const heroImage = item.fields.heroImage
+      ? (item.fields.heroImage as { fields: { title: string; file: { url: string } } }).fields
+      : null;
+
+    return {
+      params: { slug: item.fields.slug },
+      props: {
+        tags: item.fields.tags,
+        title: item.fields.title,
+        content: sanitizedContent,
+        description: item.fields.description,
+        heroImage,
+        date: new Date(item.fields.publishDate).toLocaleDateString()
+      }
+    };
+  }));
+
+  return paths;
 }
 const { title, content, date, description, heroImage } = Astro.props;
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');

@@ -1,4 +1,5 @@
-import React, { FC, MouseEventHandler } from "react";
+import type { FunctionComponent, h } from "preact";
+import type { JSX } from 'preact/jsx-runtime';
 
 const numColorMap = new Map([
   [1, 'blue'],
@@ -17,11 +18,11 @@ interface IMineBtn {
   failedBombKey: string;
   flaggedKeys: Set<unknown>;
   revealedKeys: Set<unknown>;
-  onContextMenu: MouseEventHandler<HTMLButtonElement>;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onContextMenu: JSX.MouseEventHandler<HTMLButtonElement>;
+  onClick: JSX.MouseEventHandler<HTMLButtonElement>;
 }
 
-export const MineBtn: FC<IMineBtn> = (props) => {
+export const MineBtn: FunctionComponent<IMineBtn> = (props) => {
   const { failedBombKey, flaggedKeys, revealedKeys, cellKey, cellValue, onClick, onContextMenu } = props;
   const isBombed = !!failedBombKey && cellValue === 'bomb';
   const isFlagged = flaggedKeys.has(cellKey);
@@ -46,7 +47,7 @@ export const MineBtn: FC<IMineBtn> = (props) => {
   if (isFlagged) textContent = EmoIco.FLAG;
 
   // 当揭开是0数字或者炸弹时，禁用按钮
-  const isDisabled = isRevealed && !(cellValue >= 1) || isBombed;
+  const isDisabled = isRevealed && !(Number(cellValue) >= 1) || isBombed;
 
   return <button
     key={cellKey}

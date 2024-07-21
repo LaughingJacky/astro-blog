@@ -8,7 +8,7 @@
  */
 import { useState } from "preact/hooks";
 
-import { COLS, ROWS } from "../components/Minesweep";
+import { COLS, ROWS } from "@components/Minesweep";
 
 export function generateMap(seedBombs: string[]) {
   let map = new Map();
