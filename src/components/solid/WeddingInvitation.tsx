@@ -1,6 +1,6 @@
 /** @jsxImportSource solid-js */
 import { onMount, type Component } from 'solid-js';
-import classNames from 'classNames';
+import classNames from 'classnames';
 
 import styles from './WeddingInvitation.module.scss';
 import Slider from './Slider';
