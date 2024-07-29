@@ -16,8 +16,10 @@
 		"@astrojs/solid-js": "^4.4.0",
 		"@astrojs/vercel": "^7.7.2",
 		"@contentful/rich-text-html-renderer": "^16.3.5",
+		"animejs": "^3.2.2",
 		"astro": "^4.12.2",
 		"axios": "^1.4.0",
+		"classnames": "^2.5.1",
 		"contentful": "^10.12.13",
 		"dayjs": "^1.11.7",
 		"graphql": "^16.6.0",
@@ -33,6 +35,7 @@
 		"remark-toc": "^9.0.0",
 		"sharp": "^0.32.1",
 		"solid-js": "^1.8.18",
+		"solid-transition-group": "^0.2.3",
 		"strip-markdown": "^5.0.0",
 		"unified": "^10.1.2",
 		"unist-util-visit": "^4.1.2"

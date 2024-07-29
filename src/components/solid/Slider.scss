@@ -1,0 +1,19 @@
+.s-enter {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.s-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.s-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.s-exit-active {
+  transform: translateY(100%);
+  opacity: 0;
+}

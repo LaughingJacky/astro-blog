@@ -1,0 +1,38 @@
+.slider {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 水平居中 */
+  // transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+
+.arrowBtn {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1000; /* 确保按钮在其他内容之上 */
+}
+
+.arrowBtn:first-of-type {
+  top: 10px; /* 将 "Previous" 按钮固定在顶部 */
+}
+
+.arrowBtn:last-of-type {
+  bottom: 10px; /* 将 "Next" 按钮固定在底部 */
+}
