@@ -134,16 +134,23 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 				width: 18rem;
 			}
 			.cont {
+				/* 不设 flex: 1 时，文字列的宽度由内容撑开，每张卡都不一样（实测 311~944px） */
+				flex: 1;
+				min-width: 0;
+
 				.top-box {
 					display: flex;
 				}
+				/* 原来写死 max-width: 60%，标题明明放得下也会被截断；
+				   改成只在实际空间不足时才收缩出省略号 */
 				.title {
-					max-width: 60%;
+					min-width: 0;
 				}
 
 				.tag-list {
 					margin-left: 0.75rem;
 					margin-top: 0;
+					flex-shrink: 0;
 				}
 				.description {
 					max-width: 100%;

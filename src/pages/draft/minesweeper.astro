@@ -8,5 +8,15 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 	title="草稿 | 王晓博"
 	description="Code For Fun"
 >
-  <MineSweeper client:load />
+  <main class="wrapper game-page">
+    <MineSweeper client:load />
+  </main>
 </BaseLayout>
+
+<style lang="scss">
+  .game-page {
+    display: flex;
+    justify-content: center;
+    padding-block: 4rem 6rem;
+  }
+</style>

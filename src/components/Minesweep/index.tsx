@@ -11,7 +11,6 @@ enum SweepState {
   LOSE = 'lose'
 }
 
-const SIZE = 48;
 export const ROWS = 9;
 export const COLS = 9;
 
@@ -123,18 +122,17 @@ export default function MineSweeper() {
     }
   }
 
+  // 棋盘尺寸交给 CSS 网格，列数通过 CSS 变量传给样式
+  const canvasStyle = `--cols: ${sqrt[1]}; pointer-events: ${faceEmo === SweepState.HAPPY ? 'auto' : 'none'};`;
+
   return <>
-    <div className="minesweeper-game" style={{width: sqrt[0] * SIZE}}>
+    <div className="minesweeper-game">
       <div className="top-bar">
         <div className="left">剩余炸弹：{bombNum}</div>
-        <div className={`ico-face ${faceEmo}`} onClick={initGame}></div>
-        <div></div>
+        <div className={`ico-face ${faceEmo}`} onClick={initGame} title="重新开始"></div>
+        <div className="right"></div>
       </div>
-      <div className="canvas" style={{
-        width: sqrt[0] * SIZE,
-        height: sqrt[1] * SIZE,
-        pointerEvents: faceEmo === SweepState.HAPPY ? undefined : 'none'
-      }}>
+      <div className="canvas" style={canvasStyle}>
       {
         Array.from(Array(sqrt[0]), (_, row) => Array.from(Array(sqrt[1]), (_, col) => {
           const cellKey = toKey(row, col);
