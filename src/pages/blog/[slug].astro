@@ -1,6 +1,7 @@
 ---
 import DOMPurify from 'isomorphic-dompurify';
 import marked from '../../lib/marked';
+import { withHeadingIds, type TocItem } from '@lib/toc';
 
 import ContactCTA from '@components/ContactCTA.astro';
 import Hero from '@components/Hero.astro';
@@ -12,6 +13,7 @@ import { contentfulClient } from '@lib/contentful';
 interface Props {
 	title: string;
 	content: string;
+	toc: TocItem[];
 	date: string;
 	description: string;
 	heroImage?: {
@@ -31,6 +33,8 @@ export async function getStaticPaths() {
 
   const paths = await Promise.all(items.map(async (item) => {
     const sanitizedContent = DOMPurify.sanitize(await marked.parse(String(item.fields.body)));
+    // 锚点 id 放在 sanitize 之后注入，避免被 DOMPurify 清理
+    const { html: articleHtml, toc } = withHeadingIds(sanitizedContent);
 
 		const heroImage = item.fields.heroImage
       ? (item.fields.heroImage as { fields: { title: string; file: { url: string } } }).fields
@@ -41,7 +45,8 @@ export async function getStaticPaths() {
       props: {
         tags: item.fields.tags,
         title: item.fields.title,
-        content: sanitizedContent,
+        content: articleHtml,
+        toc,
         description: item.fields.description,
         heroImage,
         date: new Date(item.fields.publishDate).toLocaleDateString()
@@ -51,7 +56,7 @@ export async function getStaticPaths() {
 
   return paths;
 }
-const { title, content, date, description, heroImage } = Astro.props;
+const { title, content, date, description, heroImage, toc } = Astro.props;
 Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
 ---
 <BaseLayout title={title} description={description}>
@@ -61,16 +66,34 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 				<div class="wrapper stack gap-2">
 					<a class="back-link" href="/blog/"><Icon icon="arrow-left" /><span class="back-text">博客列表</span></a>
 					<Hero title={title} align="start">
-						<div class="details">
-							<p class="description">{description}</p>
-						</div>
+						{description.trim() && (
+							<div class="details">
+								<p class="description">{description.trim()}</p>
+							</div>
+						)}
 					</Hero>
 				</div>
 			</header>
-			<main class="wrapper">
-				<div class="stack gap-10 content">
-					{heroImage && <img src={heroImage.file.url} alt={heroImage.title || ''} />}
-					<article set:html={content} />
+			<main class="wrapper article-layout">
+				{
+					toc.length > 1 && (
+						<details class="toc" open>
+							<summary>目录</summary>
+							<nav aria-label="文章目录">
+								<ol>
+									{toc.map((item) => (
+										<li class={`depth-${item.depth}`}>
+											<a href={`#${item.id}`}>{item.text}</a>
+										</li>
+									))}
+								</ol>
+							</nav>
+						</details>
+					)
+				}
+				<div class="article-main">
+					{heroImage && <img class="hero-image" src={heroImage.file.url} alt={heroImage.title || ''} />}
+					<article class="article-body" set:html={content} />
 				</div>
 			</main>
 		</div>
@@ -78,33 +101,287 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 	</div>
 </BaseLayout>
 
-<style lang="scss">
-.blog-detail {
-	color: var(--gray-0);
-}
-.content {
-	img {
-		margin: auto;
-		width: 50%;
-		border-radius: 4px;
-	}
-}
+<script>
+	// 窄屏默认收起目录，宽屏则常驻在右侧吸附
+	const tocEl = document.querySelector<HTMLDetailsElement>('details.toc');
+	if (tocEl) {
+		if (window.matchMedia('(max-width: 63.99em)').matches) tocEl.open = false;
 
-.back-link {
-	color: var(--gray-0);
-	font-size: var(--text-lg);
-	margin-bottom: 20px;
-	.back-text {
-		margin-left: 5px;
-	}
-}
+		const items = Array.from(tocEl.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'))
+			.map((link) => {
+				const id = link.getAttribute('href')?.slice(1);
+				return { link, heading: id ? document.getElementById(id) : null };
+			})
+			.filter((item): item is { link: HTMLAnchorElement; heading: HTMLElement } => Boolean(item.heading));
 
-.description {
-	display: inline-block;
-	background: var(--gray-box-bg);
-	color: var(--gray-dark);
-	padding: 8px 16px;
-	font-size: var(--text-md);
-	border-radius: 4px;
-}
+		if (items.length) {
+			// 用滚动位置判断当前小节：本站的滚动容器是 body，IntersectionObserver 在这里不可靠
+			const updateActive = () => {
+				let current = items[0];
+				for (const item of items) {
+					if (item.heading.getBoundingClientRect().top <= 120) current = item;
+				}
+				items.forEach((item) => item.link.classList.toggle('active', item === current));
+			};
+
+			// scroll 事件不冒泡，而且本站真正的滚动容器是 body，所以用捕获阶段监听
+			document.addEventListener('scroll', () => requestAnimationFrame(updateActive), {
+				capture: true,
+				passive: true
+			});
+			updateActive();
+		}
+	}
+</script>
+
+<style is:global lang="scss">
+	/* 内容整体收窄：原先正文一行要横跨 1300px 以上，中文长文很难跟行 */
+	.blog-detail .wrapper {
+		max-width: 64rem;
+	}
+
+	.blog-detail .back-link {
+		color: var(--gray-0);
+		font-size: var(--text-lg);
+		margin-bottom: 20px;
+
+		.back-text {
+			margin-left: 5px;
+		}
+	}
+
+	/* 文章标题在详情页给到更大字号，缩小标题与正文的落差 */
+	.blog-detail .hero .title {
+		font-size: 2rem;
+		line-height: 1.25;
+	}
+
+	/* 摘要：改成半透明胶囊，避免暗色主题里出现一块浅灰的“输入框” */
+	.blog-detail .description {
+		display: inline-block;
+		margin: 0.25rem 0 0;
+		padding: 0.4rem 0.9rem;
+		background: var(--gray-999_40);
+		border: 1px solid var(--gray-800);
+		border-radius: 999px;
+		color: var(--gray-300);
+		font-size: var(--text-sm);
+	}
+
+	/* ---------------- 正文 ---------------- */
+
+	.blog-detail .article-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		align-items: start;
+		gap: 2.5rem;
+	}
+
+	.blog-detail .article-main {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+		min-width: 0;
+	}
+
+	.blog-detail .hero-image {
+		width: 100%;
+		border: 1px solid var(--gray-800);
+		border-radius: 0.75rem;
+	}
+
+	.blog-detail .article-body {
+		color: var(--gray-100);
+		font-size: 1.0625rem;
+		line-height: 1.85;
+		overflow-wrap: break-word;
+	}
+
+	.blog-detail .article-body > * + * {
+		margin-top: 1.25em;
+	}
+
+	/* 首个子元素不要再叠加外边距，否则和头图之间会空出一大块 */
+	.blog-detail .article-body > :first-child {
+		margin-top: 0;
+	}
+
+	.blog-detail .article-body :is(h2, h3, h4) {
+		color: var(--gray-0);
+		line-height: 1.35;
+		scroll-margin-top: 1.5rem;
+	}
+
+	.blog-detail .article-body h2 {
+		margin-top: 2.4em;
+		padding-bottom: 0.35em;
+		border-bottom: 1px solid var(--gray-800);
+		font-size: 1.5rem;
+	}
+
+	.blog-detail .article-body h3 {
+		margin-top: 1.9em;
+		font-size: 1.25rem;
+	}
+
+	.blog-detail .article-body h4 {
+		margin-top: 1.6em;
+		font-size: 1.0625rem;
+	}
+
+	.blog-detail .article-body :is(p, ul, ol, blockquote, pre, table) {
+		margin: 0;
+	}
+
+	.blog-detail .article-body :is(ul, ol) {
+		padding-left: 1.4em;
+	}
+
+	.blog-detail .article-body li + li {
+		margin-top: 0.35em;
+	}
+
+	/* 正文图片统一按正文列宽铺满，不再和头图一个 50% 一个 80% */
+	.blog-detail .article-body img {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin: 0 auto;
+		border: 1px solid var(--gray-800);
+		border-radius: 0.75rem;
+	}
+
+	.blog-detail .article-body a {
+		color: #2a89ff;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.blog-detail .article-body blockquote {
+		padding: 0.25em 0 0.25em 1rem;
+		border-left: 3px solid var(--gray-600);
+		color: var(--gray-300);
+	}
+
+	.blog-detail .article-body :not(pre) > code {
+		padding: 0.15em 0.4em;
+		background: var(--gray-900);
+		border-radius: 0.25em;
+		font-size: 0.9em;
+	}
+
+	.blog-detail .article-body pre {
+		padding: 1rem 1.25rem;
+		border: 1px solid var(--gray-800);
+		border-radius: 0.75rem;
+		overflow-x: auto;
+	}
+
+	.blog-detail .article-body :is(th, td) {
+		padding: 0.5rem 0.75rem;
+		border: 1px solid var(--gray-800);
+	}
+
+	.blog-detail .article-body th {
+		background: var(--gray-900);
+		text-align: left;
+	}
+
+	/* ---------------- 目录 ---------------- */
+
+	.blog-detail .toc {
+		padding: 0.75rem 1rem;
+		background: var(--gray-999_40);
+		border: 1px solid var(--gray-800);
+		border-radius: 0.75rem;
+		font-size: var(--text-sm);
+	}
+
+	.blog-detail .toc summary {
+		cursor: pointer;
+		color: var(--gray-100);
+		font-weight: 600;
+		list-style: none;
+	}
+
+	.blog-detail .toc summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.blog-detail .toc summary::after {
+		content: '▾';
+		float: right;
+		color: var(--gray-500);
+	}
+
+	.blog-detail .toc[open] summary::after {
+		content: '▴';
+	}
+
+	.blog-detail .toc nav {
+		margin-top: 0.5rem;
+	}
+
+	.blog-detail .toc ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.blog-detail .toc a {
+		display: block;
+		padding: 0.3rem 0 0.3rem 0.75rem;
+		border-left: 2px solid transparent;
+		color: var(--gray-300);
+		line-height: 1.5;
+	}
+
+	.blog-detail .toc a:hover {
+		color: var(--gray-0);
+	}
+
+	.blog-detail .toc a.active {
+		border-left-color: var(--accent-dark);
+		color: var(--gray-0);
+	}
+
+	.blog-detail .toc .depth-3 a {
+		padding-left: 1.5rem;
+	}
+
+	.blog-detail .toc .depth-4 a {
+		padding-left: 2.25rem;
+	}
+
+	@media (min-width: 64em) {
+		.blog-detail .article-layout {
+			grid-template-columns: minmax(0, 1fr) 13rem;
+			gap: 3rem;
+		}
+
+		.blog-detail .article-main {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		.blog-detail .toc {
+			grid-column: 2;
+			grid-row: 1;
+			position: sticky;
+			top: 3rem;
+			display: flex;
+			flex-direction: column;
+			max-height: calc(100vh - 6rem);
+			padding: 1rem;
+		}
+
+		.blog-detail .toc summary {
+			display: none;
+		}
+
+		.blog-detail .toc nav {
+			margin-top: 0;
+			overflow-y: auto;
+		}
+	}
 </style>
