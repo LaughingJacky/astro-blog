@@ -11,6 +11,7 @@ import Pill from '../components/Pill.astro';
 
 // Page section components
 import ContactCTA from '../components/ContactCTA.astro';
+import SiteLinks from '../components/SiteLinks.astro';
 import Skills from '../components/Skills.astro';
 import type { BlogPost } from '../lib/contentful';
 import { contentfulClient } from '../lib/contentful';
@@ -87,6 +88,9 @@ Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalid
 			}
 			</div>
 		</main>
+		<div class="wrapper">
+			<SiteLinks />
+		</div>
 		<ContactCTA />
 	</div>
 </BaseLayout>

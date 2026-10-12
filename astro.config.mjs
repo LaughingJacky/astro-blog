@@ -44,5 +44,12 @@ export default defineConfig({
   },
   adapter: vercel(),
   output: 'static',
-  site: 'https://shawbo.ltd'
+  site: 'https://shawbo.ltd',
+  // naive-icons 是 React 组件库，默认会被 SSR externalize 到 Node 里加载真实 react；
+  // 打包进来才能让 @astrojs/preact 的 react -> preact/compat 别名生效。
+  vite: {
+    ssr: {
+      noExternal: ['naive-icons', 'react', 'react-dom', 'react/jsx-runtime']
+    }
+  }
 });

@@ -73,6 +73,9 @@
 
 	/* Transitions */
 	--theme-transition: 0.2s ease-in-out;
+
+	/* 手绘图标（naive-icons）内部描边写死 #2A2A2A，这里让它跟随主题 */
+	--naive-ink: #2a2a2a;
 }
 
 :root.theme-dark {
@@ -115,6 +118,8 @@
 		0px 7px 7px rgba(255, 255, 255, 0.05), 0px 2px 4px rgba(255, 255, 255, 0.06);
 	--shadow-lg: 0px 62px 25px rgba(255, 255, 255, 0.01), 0px 35px 21px rgba(255, 255, 255, 0.05),
 		0px 16px 16px rgba(255, 255, 255, 0.1), 0px 4px 9px rgba(255, 255, 255, 0.12);
+
+	--naive-ink: #f3f4f7;
 }
 
 html,
@@ -126,6 +131,10 @@ body {
 a {
 	text-decoration: none;
 	color: #fff;
+}
+
+svg [stroke='#2A2A2A'] {
+	stroke: var(--naive-ink);
 }
 
 body {

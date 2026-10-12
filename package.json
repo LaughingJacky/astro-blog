@@ -2,9 +2,9 @@
 	"name": "blog",
 	"type": "module",
 	"version": "0.0.1",
-	"packageManager": "pnpm@8.15.9",
+	"packageManager": "pnpm@9.15.9",
 	"engines": {
-		"node": "22.x"
+		"node": ">=22"
 	},
 	"scripts": {
 		"dev": "astro dev",
@@ -20,6 +20,7 @@
 		"@astrojs/solid-js": "^4.4.0",
 		"@astrojs/vercel": "^7.7.2",
 		"@contentful/rich-text-html-renderer": "^16.3.5",
+		"@preact/compat": "^18.3.2",
 		"animejs": "^3.2.2",
 		"astro": "^4.12.2",
 		"axios": "^1.4.0",
@@ -30,6 +31,7 @@
 		"graphql-request": "^6.0.0",
 		"isomorphic-dompurify": "^2.14.0",
 		"marked": "^12.0.2",
+		"naive-icons": "^1.6.0",
 		"preact": "^10.22.1",
 		"prismjs": "^1.29.0",
 		"rehype-stringify": "^9.0.3",
@@ -43,11 +45,6 @@
 		"strip-markdown": "^5.0.0",
 		"unified": "^10.1.2",
 		"unist-util-visit": "^4.1.2"
-	},
-	"overrides": {
-		"react": "pnpm:@preact/compat@latest",
-		"react-dom": "pnpm:@preact/compat@latest",
-		"react/jsx-runtime": "pnpm:@preact/jsx-runtime@latest"
 	},
 	"devDependencies": {
 		"@types/js-yaml": "^4.0.5",

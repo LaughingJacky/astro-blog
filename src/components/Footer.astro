@@ -1,5 +1,5 @@
 ---
-import Icon from './Icon.astro';
+import NaiveIcon from './preact/NaiveIcon';
 const currentYear = new Date().getFullYear();
 ---
 
@@ -7,7 +7,7 @@ const currentYear = new Date().getFullYear();
 	<div class="group">
 		<p>
 			Developed with <a href="https://astro.build/">Astro</a> && hosted on <a href="https://vercel.com/">vercel</a>
-			<Icon icon="rocket-launch" size="1.2em" />
+			<NaiveIcon name="rocket" size="1.35em" />
 		</p>
 		<p>&copy; {currentYear} 王晓博</p>
 	</div>

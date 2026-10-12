@@ -1,14 +1,16 @@
 ---
 import Icon, { Props as IconProps } from './Icon.astro';
+import NaiveIcon from './preact/NaiveIcon';
 import ThemeToggle from './ThemeToggle.astro';
 
-/** Main menu items */
-const textLinks: { label: string; href: string }[] = [
+/** Main menu items — external 为 true 的项会新窗口打开并带上外链标记 */
+const textLinks: { label: string; href: string; external?: boolean }[] = [
 	{ label: '首页', href: '/' },
 	{ label: '博客', href: '/blog/' },
 	{ label: '草稿', href: '/draft/' },
 	{label: '关于我', href: '/about/'},
-	{ label: '黑科技周刊', href: '/black-tech-weekly/' }
+	{ label: '黑科技周刊', href: '/black-tech-weekly/' },
+	{ label: '游戏资讯', href: 'https://game-feeds.shawbo.wang/', external: true }
 ];
 
 /** Icon links to social media — edit these with links to your profiles! */
@@ -36,21 +38,30 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 	<div id="menu-content">
 		<ul class="nav-items">
 			{
-				textLinks.map(({ label, href }) => (
+				textLinks.map(({ label, href, external }) => (
 					<li>
 						<a
-							aria-current={Astro.url.pathname === href}
+							aria-current={!external && Astro.url.pathname === href}
 							class:list={[
 								'link',
 								{
 									active:
-										Astro.url.pathname === href ||
-										(href !== '/' && Astro.url.pathname.startsWith(href)),
+										!external &&
+										(Astro.url.pathname === href ||
+											(href !== '/' && Astro.url.pathname.startsWith(href))),
 								},
+								{ external },
 							]}
 							href={href}
+							target={external ? '_blank' : undefined}
+							rel={external ? 'noopener noreferrer' : undefined}
 						>
 							{label}
+							{external && (
+								<span class="ext-mark" aria-hidden="true">
+									<NaiveIcon name="external-link" size="0.85em" />
+								</span>
+							)}
 						</a>
 					</li>
 				))
@@ -186,13 +197,27 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 	}
 
 	.link {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
 		color: var(--gray-300);
 		text-decoration: none;
+		white-space: nowrap;
 	}
 
 	.link.active {
 		color: var(--gray-0);
+	}
+
+	.ext-mark {
+		display: inline-flex;
+		opacity: 0.6;
+		transition: opacity var(--theme-transition);
+	}
+
+	.link:hover .ext-mark,
+	.link:focus-visible .ext-mark {
+		opacity: 1;
 	}
 
 	.menu-footer {
@@ -276,7 +301,7 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 		}
 
 		.link {
-			padding: 0.5rem 1rem;
+			padding: 0.5rem 0.8125rem;
 			border-radius: 999rem;
 			transition: color var(--theme-transition), background-color var(--theme-transition);
 		}
