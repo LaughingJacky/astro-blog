@@ -18,14 +18,8 @@ export interface ICard {
 }
 
 export default function Card({ cardName, imgSrc, label, label2, path }: ICard) {
-  const onClick = () => {
-    console.log(111);
-    location.href = `/draft${path}`;
-  }
   return (
-    <div className="userCard"
-      onClick={onClick}
-    >
+    <a className="userCard" href={`/games${path}`}>
       <div class="cardHeader">
         <div class="userName">
           {cardName}
@@ -36,6 +30,6 @@ export default function Card({ cardName, imgSrc, label, label2, path }: ICard) {
         <div class="infoLabel">{label}</div>
         {label2 ? <div class="infoLabel">{label2}</div> : null}
       </div>
-    </div>
+    </a>
   );
 };

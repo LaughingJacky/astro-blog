@@ -2,17 +2,29 @@
 import Icon, { Props as IconProps } from './Icon.astro';
 import NaiveIcon from './preact/NaiveIcon';
 import ThemeToggle from './ThemeToggle.astro';
+import { siteLinks } from '../lib/links';
 
-/** Main menu items — external 为 true 的项会新窗口打开并带上外链标记 */
-const textLinks: { label: string; href: string; external?: boolean }[] = [
-	{ label: '首页', href: '/' },
-	{ label: '博客', href: '/blog/' },
-	{ label: '草稿', href: '/draft/' },
-	{label: '关于我', href: '/about/'},
-	{ label: '黑科技周刊', href: '/black-tech-weekly/' },
-	{ label: '游戏资讯', href: 'https://game-feeds.shawbo.wang/', external: true },
-	{ label: '公开直播', href: 'https://openstream.shawbo.wang/', external: true },
+type NavLink = { kind: 'link'; label: string; href: string };
+type NavGroup = { kind: 'group'; label: string; items: { label: string; href: string }[] };
+type NavEntry = NavLink | NavGroup;
+
+/** 本站栏目在前，关于我收尾；站外站点收进最后一组。 */
+const navEntries: NavEntry[] = [
+	{ kind: 'link', label: '首页', href: '/' },
+	{ kind: 'link', label: '博客', href: '/blog/' },
+	{ kind: 'link', label: '黑科技周刊', href: '/black-tech-weekly/' },
+	{ kind: 'link', label: '游戏', href: '/games/' },
+	{ kind: 'link', label: '关于我', href: '/about/' },
+	{
+		kind: 'group',
+		label: '站点',
+		items: siteLinks.map(({ navLabel, url }) => ({ label: navLabel, href: url })),
+	},
 ];
+
+function isCurrent(href: string) {
+	return Astro.url.pathname === href || (href !== '/' && Astro.url.pathname.startsWith(href));
+}
 
 /** Icon links to social media — edit these with links to your profiles! */
 const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
@@ -39,33 +51,54 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 	<div id="menu-content">
 		<ul class="nav-items">
 			{
-				textLinks.map(({ label, href, external }) => (
-					<li>
-						<a
-							aria-current={!external && Astro.url.pathname === href}
-							class:list={[
-								'link',
-								{
-									active:
-										!external &&
-										(Astro.url.pathname === href ||
-											(href !== '/' && Astro.url.pathname.startsWith(href))),
-								},
-								{ external },
-							]}
-							href={href}
-							target={external ? '_blank' : undefined}
-							rel={external ? 'noopener noreferrer' : undefined}
-						>
-							{label}
-							{external && (
-								<span class="ext-mark" aria-hidden="true">
-									<NaiveIcon name="external-link" size="0.85em" />
-								</span>
-							)}
-						</a>
-					</li>
-				))
+				navEntries.map((entry) => {
+					switch (entry.kind) {
+						case 'link':
+							return (
+								<li>
+									<a
+										aria-current={isCurrent(entry.href) ? 'page' : undefined}
+										class:list={['link', { active: isCurrent(entry.href) }]}
+										href={entry.href}
+									>
+										{entry.label}
+									</a>
+								</li>
+							);
+						case 'group':
+							return (
+								<li class="nav-group">
+									<details>
+										<summary class="link group-toggle">
+											{entry.label}
+											<span class="caret" aria-hidden="true" />
+										</summary>
+										<ul class="submenu">
+											{entry.items.map((item) => (
+												<li>
+													<a
+														class="link"
+														href={item.href}
+														target="_blank"
+														rel="noopener noreferrer"
+													>
+														{item.label}
+														<span class="ext-mark" aria-hidden="true">
+															<NaiveIcon name="external-link" size="0.85em" />
+														</span>
+													</a>
+												</li>
+											))}
+										</ul>
+									</details>
+								</li>
+							);
+						default: {
+							const exhaustive: never = entry;
+							throw new Error(`Unhandled nav entry: ${JSON.stringify(exhaustive)}`);
+						}
+					}
+				})
 			}
 		</ul>
 		<div class="menu-footer">
@@ -120,6 +153,21 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 		}
 	}
 	customElements.define('menu-button', MenuButton);
+
+	const siteMenu = document.querySelector<HTMLDetailsElement>('.nav-group details');
+	if (siteMenu) {
+		const closeSiteMenu = () => {
+			siteMenu.open = false;
+		};
+		document.addEventListener('click', (event) => {
+			if (!siteMenu.open) return;
+			if (event.target instanceof Node && siteMenu.contains(event.target)) return;
+			closeSiteMenu();
+		});
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') closeSiteMenu();
+		});
+	}
 </script>
 
 <style>
@@ -208,6 +256,54 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 
 	.link.active {
 		color: var(--gray-0);
+	}
+
+	.nav-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.group-toggle {
+		width: fit-content;
+		border: 0;
+		background: none;
+		font: inherit;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.group-toggle::-webkit-details-marker {
+		display: none;
+	}
+
+	.caret {
+		width: 0.4em;
+		height: 0.4em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: translateY(-0.1em) rotate(45deg);
+	}
+
+	.nav-group details[open] .caret {
+		transform: translateY(0.1em) rotate(225deg);
+	}
+
+	.submenu {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0 0 0 1rem;
+		list-style: none;
+	}
+
+	.nav-group details:not([open]) .submenu {
+		display: none;
+	}
+
+	.group-toggle::marker {
+		content: '';
 	}
 
 	.ext-mark {
@@ -316,6 +412,38 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 		.link.active {
 			color: var(--accent-text-over);
 			background-color: var(--accent-regular);
+		}
+
+		.nav-group {
+			position: relative;
+			gap: 0;
+		}
+
+		.submenu {
+			display: none;
+			position: absolute;
+			top: calc(100% + 0.65rem);
+			right: 0;
+			z-index: 2;
+			min-width: 9.5rem;
+			gap: 0.15rem;
+			padding: 0.4rem;
+			border-radius: 1rem;
+			background: radial-gradient(var(--gray-900), var(--gray-800) 150%);
+			box-shadow: var(--shadow-lg);
+		}
+
+		.submenu::before {
+			position: absolute;
+			inset: -1px;
+			content: '';
+			background: var(--gradient-stroke);
+			border-radius: 1rem;
+			z-index: -1;
+		}
+
+		.nav-group details[open] .submenu {
+			display: flex;
 		}
 
 		.menu-footer {

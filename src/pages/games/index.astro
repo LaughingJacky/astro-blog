@@ -1,0 +1,45 @@
+---
+import Card from '../../components/Card';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const games = [
+	{
+		name: '扫雷',
+		path: '/minesweeper',
+		description: '经典扫雷',
+		img: '/assets/mine-smile.png',
+	},
+];
+
+Astro.response.headers.set('Cache-Control', 's-maxage=86400, stale-while-revalidate=604800');
+---
+
+<BaseLayout title="游戏 | 王晓博" description="随手做的小游戏">
+	<main class="wrapper games">
+		<h1>游戏</h1>
+		<div class="list">
+			{games.map((game) => (
+				<Card client:load imgSrc={game.img} path={game.path} cardName={game.name} label={game.description} />
+			))}
+		</div>
+	</main>
+</BaseLayout>
+
+<style>
+	.games {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding-bottom: 4rem;
+	}
+
+	.games h1 {
+		margin: 0;
+		font-size: var(--text-2xl);
+	}
+
+	.list {
+		display: flex;
+		flex-wrap: wrap;
+	}
+</style>

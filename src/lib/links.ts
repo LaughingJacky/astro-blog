@@ -1,6 +1,8 @@
 import type { NaiveIconName } from '../components/preact/NaiveIcon';
 
 export interface SiteLink {
+	/** 导航里的短名称 */
+	navLabel: string;
 	/** 站点名 */
 	name: string;
 	/** 外链地址 */
@@ -24,6 +26,7 @@ export interface SiteLink {
 /** 我搭建并维护的其他站点 —— 新增条目直接往数组里加即可 */
 export const siteLinks: SiteLink[] = [
 	{
+		navLabel: '游戏资讯',
 		name: 'GameFeeds · 游戏资讯',
 		url: 'https://game-feeds.shawbo.wang/',
 		relation: '我做的另一个站',
@@ -35,6 +38,7 @@ export const siteLinks: SiteLink[] = [
 		accent: '#E76F51',
 	},
 	{
+		navLabel: '公开直播',
 		name: 'Open Stream · 公开直播',
 		url: 'https://openstream.shawbo.wang/',
 		relation: '我做的另一个站',
