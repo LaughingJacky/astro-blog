@@ -4,6 +4,7 @@ import {
 	BadgeCheckIcon,
 	BasketballIcon,
 	ExternalLinkIcon,
+	MonitorIcon,
 	RocketIcon,
 } from 'naive-icons';
 
@@ -27,6 +28,7 @@ export type NaiveIconName =
 	| 'badge-check'
 	| 'basketball'
 	| 'external-link'
+	| 'monitor'
 	| 'rocket';
 
 export interface NaiveIconProps {
@@ -45,6 +47,7 @@ const registry: Record<NaiveIconName, ComponentType<any>> = {
 	'badge-check': BadgeCheckIcon,
 	basketball: BasketballIcon,
 	'external-link': ExternalLinkIcon,
+	monitor: MonitorIcon,
 	rocket: RocketIcon,
 };
 

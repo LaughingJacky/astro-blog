@@ -25,9 +25,7 @@ export default defineConfig({
       exclude: ['**/solid/*.scss']
     }),
     sitemap({
-    // i18n: {
-    //   defaultLocale: 'zh-CN'
-    // },
+      filter: (page) => !page.includes('/draft'),
       serialize(item) {
         if (/\/black-tech-weekly\//.test(item.url)) {
           item.changefreq = 'weekly';
@@ -44,7 +42,7 @@ export default defineConfig({
   },
   adapter: vercel(),
   output: 'static',
-  site: 'https://shawbo.ltd',
+  site: 'https://www.shawbo.wang',
   // naive-icons 是 React 组件库，默认会被 SSR externalize 到 Node 里加载真实 react；
   // 打包进来才能让 @astrojs/preact 的 react -> preact/compat 别名生效。
   vite: {

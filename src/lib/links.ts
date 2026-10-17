@@ -34,4 +34,15 @@ export const siteLinks: SiteLink[] = [
 		icon: 'basketball',
 		accent: '#E76F51',
 	},
+	{
+		name: 'Open Stream · 公开直播',
+		url: 'https://openstream.shawbo.wang/',
+		relation: '我做的另一个站',
+		desc: '靠着看的公开直播、独立动画和开源影片。打开就在播，不用先做选择题。',
+		owner: '由本站作者 shawbo 搭建并维护',
+		ownerAvatar: '/assets/portrait.jpg',
+		facts: ['个人项目', '维护中', '直播目录'],
+		icon: 'monitor',
+		accent: '#38BDF8',
+	},
 ];

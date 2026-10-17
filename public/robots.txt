@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://shawbo.ltd/sitemap-index.html
+Sitemap: https://www.shawbo.wang/sitemap-index.xml
