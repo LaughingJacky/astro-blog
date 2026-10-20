@@ -5,25 +5,32 @@ import ThemeToggle from './ThemeToggle.astro';
 import { siteLinks } from '../lib/links';
 
 type NavLink = { kind: 'link'; label: string; href: string };
-type NavGroup = { kind: 'group'; label: string; items: { label: string; href: string }[] };
+type NavSubItem = { label: string; href: string };
+type NavGroup = { kind: 'group'; label: string; items: NavSubItem[] };
 type NavEntry = NavLink | NavGroup;
 
-/** 本站栏目在前，关于我收尾；站外站点收进最后一组。 */
+/** 一级：首页、博客、关于我、站点；栏目与其它站点收进「站点」。 */
 const navEntries: NavEntry[] = [
 	{ kind: 'link', label: '首页', href: '/' },
 	{ kind: 'link', label: '博客', href: '/blog/' },
-	{ kind: 'link', label: '黑科技周刊', href: '/black-tech-weekly/' },
-	{ kind: 'link', label: '游戏', href: '/games/' },
 	{ kind: 'link', label: '关于我', href: '/about/' },
 	{
 		kind: 'group',
 		label: '站点',
-		items: siteLinks.map(({ navLabel, url }) => ({ label: navLabel, href: url })),
+		items: [
+			{ label: '黑科技周刊', href: '/black-tech-weekly/' },
+			{ label: '游戏', href: '/games/' },
+			...siteLinks.map(({ navLabel, url }) => ({ label: navLabel, href: url })),
+		],
 	},
 ];
 
 function isCurrent(href: string) {
 	return Astro.url.pathname === href || (href !== '/' && Astro.url.pathname.startsWith(href));
+}
+
+function isExternalHref(href: string) {
+	return /^https?:\/\//i.test(href);
 }
 
 /** Icon links to social media — edit these with links to your profiles! */
@@ -74,21 +81,27 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 											<span class="caret" aria-hidden="true" />
 										</summary>
 										<ul class="submenu">
-											{entry.items.map((item) => (
-												<li>
-													<a
-														class="link"
-														href={item.href}
-														target="_blank"
-														rel="noopener noreferrer"
-													>
-														{item.label}
-														<span class="ext-mark" aria-hidden="true">
-															<NaiveIcon name="external-link" size="0.85em" />
-														</span>
-													</a>
-												</li>
-											))}
+											{entry.items.map((item) => {
+												const external = isExternalHref(item.href);
+												return (
+													<li>
+														<a
+															class:list={['link', { active: !external && isCurrent(item.href) }]}
+															aria-current={!external && isCurrent(item.href) ? 'page' : undefined}
+															href={item.href}
+															target={external ? '_blank' : undefined}
+															rel={external ? 'noopener noreferrer' : undefined}
+														>
+															{item.label}
+															{external && (
+																<span class="ext-mark" aria-hidden="true">
+																	<NaiveIcon name="external-link" size="0.85em" />
+																</span>
+															)}
+														</a>
+													</li>
+												);
+											})}
 										</ul>
 									</details>
 								</li>
@@ -289,11 +302,17 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 		transform: translateY(0.1em) rotate(225deg);
 	}
 
+	.nav-group details {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
+
 	.submenu {
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
-		margin: 0;
+		margin: 0.75rem 0 0;
 		padding: 0 0 0 1rem;
 		list-style: none;
 	}
@@ -419,6 +438,10 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 			gap: 0;
 		}
 
+		.nav-group details {
+			display: block;
+		}
+
 		.submenu {
 			display: none;
 			position: absolute;
@@ -427,6 +450,7 @@ const iconLinks: { label: string; href: string; icon: IconProps['icon'] }[] = [
 			z-index: 2;
 			min-width: 9.5rem;
 			gap: 0.15rem;
+			margin-top: 0;
 			padding: 0.4rem;
 			border-radius: 1rem;
 			background: radial-gradient(var(--gray-900), var(--gray-800) 150%);

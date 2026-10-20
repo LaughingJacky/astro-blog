@@ -3,6 +3,7 @@
 // https://docs.astro.build/en/core-concepts/layouts/
 
 // Component Imports
+import ClarityInit from '../components/ClarityInit.astro';
 import MainHead from '../components/MainHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -28,6 +29,8 @@ const { title, description } = Astro.props;
 			<slot />
 			<Footer />
 		</div>
+
+		<ClarityInit />
 
 		<script>
 			// Add “loaded” class once the document has completely loaded.
