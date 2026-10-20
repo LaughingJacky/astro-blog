@@ -7,24 +7,15 @@ const links = siteLinks.map((link) => ({ ...link, host: new URL(link.url).hostna
 
 <ul class="links-grid">
 	{
-		links.map(({ name, url, relation, desc, owner, ownerAvatar, facts, icon, accent, host }) => (
+		links.map(({ name, url, desc, facts, icon, accent, host }) => (
 			<li>
 				<a class="site-card" href={url} target="_blank" rel="noopener noreferrer">
-					<p class="eyebrow">{relation}</p>
-
 					<div class="head">
 						<span class="badge" style={`--badge: ${accent}`}>
 							<NaiveIcon name={icon} size="1.9rem" />
 						</span>
 						<div class="heading">
 							<h3 class="name">{name}</h3>
-							<span class="owner">
-								<img class="avatar" src={ownerAvatar} alt="" width="40" height="40" />
-								<span class="owner-text">{owner}</span>
-								<span class="verified">
-									<NaiveIcon name="badge-check" size="1.05em" color={accent} />
-								</span>
-							</span>
 						</div>
 					</div>
 
@@ -84,14 +75,6 @@ const links = siteLinks.map((link) => ({ ...link, host: new URL(link.url).hostna
 		}
 	}
 
-	.eyebrow {
-		margin: 0;
-		font-family: var(--font-brand);
-		font-size: var(--text-sm);
-		letter-spacing: 0.08em;
-		color: var(--gray-400);
-	}
-
 	.head {
 		display: flex;
 		align-items: center;
@@ -119,7 +102,6 @@ const links = siteLinks.map((link) => ({ ...link, host: new URL(link.url).hostna
 
 	.heading {
 		display: grid;
-		gap: 0.35rem;
 		min-width: 0;
 	}
 
@@ -129,29 +111,6 @@ const links = siteLinks.map((link) => ({ ...link, host: new URL(link.url).hostna
 		font-size: var(--text-lg);
 		line-height: 1.3;
 		color: var(--gray-0);
-	}
-
-	.owner {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.4rem;
-		font-size: var(--text-sm);
-		color: var(--gray-400);
-	}
-
-	.avatar {
-		width: 1.5rem;
-		height: 1.5rem;
-		flex: 0 0 auto;
-		object-fit: cover;
-		border-radius: 50% 46% 54% 48%;
-		border: 1px solid var(--gray-800);
-	}
-
-	.owner-text,
-	.verified {
-		display: inline-flex;
-		align-items: center;
 	}
 
 	.desc {

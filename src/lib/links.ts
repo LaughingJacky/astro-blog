@@ -7,14 +7,8 @@ export interface SiteLink {
 	name: string;
 	/** 外链地址 */
 	url: string;
-	/** 与本站的关系，一句话讲清“谁做的” */
-	relation: string;
 	/** 站点简介 */
 	desc: string;
-	/** 维护者说明 */
-	owner: string;
-	/** 维护者头像 */
-	ownerAvatar: string;
 	/** 站点属性标签 */
 	facts: string[];
 	/** 手绘图标名 */
@@ -29,11 +23,8 @@ export const siteLinks: SiteLink[] = [
 		navLabel: '游戏资讯',
 		name: 'GameFeeds · 游戏资讯',
 		url: 'https://game-feeds.shawbo.wang/',
-		relation: '我做的另一个站',
 		desc: '聚合主流游戏媒体的最新资讯，每天自动抓取更新，一个页面刷完今天有什么好玩的。',
-		owner: '由本站作者 shawbo 搭建并维护',
-		ownerAvatar: '/assets/portrait.jpg',
-		facts: ['个人项目', '维护中', '资讯聚合'],
+		facts: ['资讯聚合', '主机新闻'],
 		icon: 'basketball',
 		accent: '#E76F51',
 	},
@@ -41,11 +32,8 @@ export const siteLinks: SiteLink[] = [
 		navLabel: '公开直播',
 		name: 'Open Stream · 公开直播',
 		url: 'https://openstream.shawbo.wang/',
-		relation: '我做的另一个站',
-		desc: '靠着看的公开直播、独立动画和开源影片。打开就在播，不用先做选择题。',
-		owner: '由本站作者 shawbo 搭建并维护',
-		ownerAvatar: '/assets/portrait.jpg',
-		facts: ['个人项目', '维护中', '直播目录'],
+		desc: '靠着看的公开直播、独立动画和开源影片。',
+		facts: ['动漫直播', '海外新闻台', '视频策展'],
 		icon: 'monitor',
 		accent: '#38BDF8',
 	},
